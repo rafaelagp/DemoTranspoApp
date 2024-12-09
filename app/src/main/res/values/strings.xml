@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">TranspoApp</string>
+    <string name="requestcar_userid_field_title">Id do Usuário</string>
+    <string name="requestcar_originaddress_field_title">Endereço de Origem</string>
+    <string name="requestcar_destinationaddress_field_title">Endereço de Destino</string>
+    <string name="requestcar_estimatecost_field_title">Estimativa de Custo</string>
+    <string name="requestcar_calculate_button_text">Calcular</string>
+    <string name="requestcar_request_button_text">Solicitar</string>
 </resources>

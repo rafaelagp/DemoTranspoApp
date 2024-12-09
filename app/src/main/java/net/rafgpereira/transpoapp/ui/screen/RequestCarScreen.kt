@@ -20,48 +20,56 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import net.rafgpereira.transpoapp.R
 
 @Composable
 fun RequestCarScreen(modifier: Modifier,) {
     var userId by remember { mutableStateOf("") }
     var originAddress by remember { mutableStateOf("") }
     var destinationAddress by remember { mutableStateOf("") }
-    var costEstimate by remember { mutableStateOf("") }
+    val costEstimate by remember { mutableStateOf("") }
 
     Scaffold(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(dimensionResource(R.dimen.screen_padding)),
     ) { innerPadding ->
         Column(
             modifier = modifier
                 .padding(innerPadding)
                 .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(
-                space = 8.dp,
+                space = dimensionResource(R.dimen.space),
                 alignment = Alignment.CenterVertically,
             ),
             horizontalAlignment = Alignment.Start,
         ) {
             TextField(
-                modifier = modifier.width(200.dp),
+                modifier = modifier.width(dimensionResource(R.dimen.small_textfield_width)),
                 value = userId,
                 onValueChange = { userId = it },
-                label = { Text(text = "Id do Usuário",) },
+                label = {
+                    Text(text = stringResource(R.string.requestcar_userid_field_title),)
+                },
             )
             TextField(
                 modifier = modifier.fillMaxWidth(),
                 value = originAddress,
                 onValueChange = { originAddress = it },
-                label = { Text(text = "Endereço de Origem",) },
+                label = {
+                    Text(text = stringResource(R.string.requestcar_originaddress_field_title),)
+                },
             )
             TextField(
                 modifier = modifier.fillMaxWidth(),
                 value = destinationAddress,
                 onValueChange = { destinationAddress = it },
-                label = { Text(text = "Endereço de Destino",) },
+                label = {
+                    Text(text = stringResource(R.string.requestcar_destinationaddress_field_title),)
+                },
             )
             CostEstimateFieldAndButton(
                 modifier = modifier,
@@ -72,10 +80,16 @@ fun RequestCarScreen(modifier: Modifier,) {
             //TODO implement request and navigation to next screen
             Button(
                 modifier = modifier
-                    .padding(PaddingValues(0.dp, 8.dp, 0.dp, 0.dp))
-                    .align(Alignment.CenterHorizontally),
+                    .padding(PaddingValues(
+                        start = dimensionResource(R.dimen.zero_dp),
+                        top = dimensionResource(R.dimen.space),
+                        end = dimensionResource(R.dimen.zero_dp),
+                        bottom = dimensionResource(R.dimen.zero_dp)
+                    ))
+                    .align(Alignment.CenterHorizontally)
+                    .width(dimensionResource(R.dimen.button_width)),
                 onClick = {},
-            ) { Text("Solicitar",) }
+            ) { Text(stringResource(R.string.requestcar_request_button_text),) }
         }
     }
 }
@@ -85,26 +99,26 @@ fun CostEstimateFieldAndButton(
     modifier: Modifier,
     costEstimate: String,
 ) = Row(
-    horizontalArrangement = Arrangement.spacedBy(8.dp),
+    horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.space)),
     verticalAlignment = Alignment.CenterVertically,
 ) {
     TextField(
-        modifier = modifier.width(200.dp),
+        modifier = modifier.width(dimensionResource(R.dimen.small_textfield_width)),
         value = costEstimate,
         onValueChange = {},
-        label = { Text(text = "Estimativa de Custo",) },
+        label = { Text(text = stringResource(R.string.requestcar_estimatecost_field_title),) },
         enabled = false,
     )
     //TODO add debounce
     //TODO add on-going request animation
     //TODO implement calculation request
     FilledTonalButton(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.width(dimensionResource(R.dimen.button_width)),
         onClick = {},
-        contentPadding = PaddingValues(0.dp),
+        contentPadding = PaddingValues(dimensionResource(R.dimen.zero_dp)),
     ) {
         Text(
-            text = "Calcular",
+            text = stringResource(R.string.requestcar_calculate_button_text),
             maxLines = 1,
         )
     }
