@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -24,6 +25,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import net.rafgpereira.transpoapp.R
+import net.rafgpereira.transpoapp.ui.common.ThemedTopAppBar
 
 @Composable
 fun RequestCarScreen(modifier: Modifier,) {
@@ -33,63 +35,71 @@ fun RequestCarScreen(modifier: Modifier,) {
     val costEstimate by remember { mutableStateOf("") }
 
     Scaffold(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(dimensionResource(R.dimen.screen_padding)),
+        modifier = modifier.fillMaxSize(),
+        topBar = { ThemedTopAppBar(modifier, stringResource(R.string.app_name)) },
     ) { innerPadding ->
-        Column(
-            modifier = modifier
-                .padding(innerPadding)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(
-                space = dimensionResource(R.dimen.space),
-                alignment = Alignment.CenterVertically,
-            ),
-            horizontalAlignment = Alignment.Start,
+        Surface(modifier = modifier
+            .padding(innerPadding)
+            .fillMaxSize()
         ) {
-            TextField(
-                modifier = modifier.width(dimensionResource(R.dimen.small_textfield_width)),
-                value = userId,
-                onValueChange = { userId = it },
-                label = {
-                    Text(text = stringResource(R.string.requestcar_userid_field_title),)
-                },
-            )
-            TextField(
-                modifier = modifier.fillMaxWidth(),
-                value = originAddress,
-                onValueChange = { originAddress = it },
-                label = {
-                    Text(text = stringResource(R.string.requestcar_originaddress_field_title),)
-                },
-            )
-            TextField(
-                modifier = modifier.fillMaxWidth(),
-                value = destinationAddress,
-                onValueChange = { destinationAddress = it },
-                label = {
-                    Text(text = stringResource(R.string.requestcar_destinationaddress_field_title),)
-                },
-            )
-            CostEstimateFieldAndButton(
-                modifier = modifier,
-                costEstimate = costEstimate,
-            )
-            //TODO add debounce
-            //TODO add on-going request animation
-            //TODO implement request and navigation to next screen
-            Button(
+            Column(
                 modifier = modifier
-                    .padding(PaddingValues(
-                        start = dimensionResource(R.dimen.zero_dp),
-                        top = dimensionResource(R.dimen.space),
-                        end = dimensionResource(R.dimen.zero_dp),
-                        bottom = dimensionResource(R.dimen.zero_dp)
-                    ))
-                    .align(Alignment.CenterHorizontally)
-                    .width(dimensionResource(R.dimen.button_width)),
-                onClick = {},
-            ) { Text(stringResource(R.string.requestcar_request_button_text),) }
+                    .padding(dimensionResource(R.dimen.screen_padding))
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(
+                    space = dimensionResource(R.dimen.space),
+                    alignment = Alignment.CenterVertically,
+                ),
+                horizontalAlignment = Alignment.Start,
+            ) {
+                TextField(
+                    modifier = modifier.width(dimensionResource(R.dimen.small_textfield_width)),
+                    value = userId,
+                    onValueChange = { userId = it },
+                    label = {
+                        Text(text = stringResource(R.string.requestcar_userid_field_title),)
+                    },
+                )
+                TextField(
+                    modifier = modifier.fillMaxWidth(),
+                    value = originAddress,
+                    onValueChange = { originAddress = it },
+                    label = {
+                        Text(text = stringResource(R.string.requestcar_originaddress_field_title),)
+                    },
+                )
+                TextField(
+                    modifier = modifier.fillMaxWidth(),
+                    value = destinationAddress,
+                    onValueChange = { destinationAddress = it },
+                    label = {
+                        Text(text =
+                            stringResource(R.string.requestcar_destinationaddress_field_title),
+                        )
+                    },
+                )
+                CostEstimateFieldAndButton(
+                    modifier = modifier,
+                    costEstimate = costEstimate,
+                )
+                //TODO add debounce
+                //TODO add on-going request animation
+                //TODO implement request and navigation to next screen
+                Button(
+                    modifier = modifier
+                        .padding(
+                            PaddingValues(
+                                start = dimensionResource(R.dimen.zero_dp),
+                                top = dimensionResource(R.dimen.space),
+                                end = dimensionResource(R.dimen.zero_dp),
+                                bottom = dimensionResource(R.dimen.zero_dp)
+                            )
+                        )
+                        .align(Alignment.CenterHorizontally)
+                        .width(dimensionResource(R.dimen.button_width)),
+                    onClick = {},
+                ) { Text(stringResource(R.string.requestcar_request_button_text),) }
+            }
         }
     }
 }
