@@ -132,4 +132,4 @@ fun CostEstimateFieldAndButton(
 
 @Composable
 @Preview(showSystemUi = true, showBackground = true)
-fun RequestCarScreenPreview() = RequestCarScreen(Modifier, {})
+fun RequestCarScreenPreview() = RequestCarScreen(Modifier) {}

@@ -130,8 +130,8 @@ fun LabelAndInformationPreview() = LabelAndInformation("nome", fakeDrivers[0].na
 
 @Composable
 @Preview(showSystemUi = false, showBackground = false)
-fun DriverCardPreview() = DriverCard(Modifier, fakeDrivers[0], {})
+fun DriverCardPreview() = DriverCard(Modifier, fakeDrivers[0]) {}
 
 @Composable
 @Preview(showSystemUi = true, showBackground = true)
-fun RequestCarOptionsScreenPreview() = RequestCarOptionsScreen(Modifier, fakeDrivers, {})
+fun RequestCarOptionsScreenPreview() = RequestCarOptionsScreen(Modifier, fakeDrivers) {}
