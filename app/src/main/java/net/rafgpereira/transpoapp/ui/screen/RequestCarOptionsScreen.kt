@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,23 +21,19 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.rememberCameraPositionState
 import net.rafgpereira.transpoapp.R
+import net.rafgpereira.transpoapp.domain.model.TempDriver
+import net.rafgpereira.transpoapp.domain.model.fakeDrivers
 import net.rafgpereira.transpoapp.ui.common.ScaffoldAndSurface
 
-//TODO replace temporary driver class
-data class TempDriver(
-    val name: String,
-    val desc: String,
-    val vehicle: String,
-    val rating: String,
-    val cost: String,
-)
+val fakeOriginLatLng = LatLng(-23.5215624, -46.763286699999995)
 
-val fakeDrivers = arrayOf(
-    TempDriver("João","Sou motorista a 10 anos","Monza","8","$20"),
-    TempDriver("Thiago","","Kwid","10","$25"),
-    TempDriver("Paulo","Vida-loka","Toyota Corolla","5","$21"),
-)
 //TODO add navigate back arrow
 @Composable
 fun RequestCarOptionsScreen(
@@ -47,19 +44,46 @@ fun RequestCarOptionsScreen(
         modifier = modifier,
         title = stringResource(R.string.requestcaroptions_screen_title),
     ) {
-        LazyColumn(contentPadding = PaddingValues(dimensionResource(R.dimen.space))) {
-            items(
-                count = drivers.size,
-                itemContent = { index ->
-                    DriverCard(
-                        modifier = modifier,
-                        driver = drivers[index],
-                        chooseAction = navigateToHistoryScreenAction,
-                    )
-                },
-            )
+        Column {
+            RouteMap(fakeOriginLatLng)
+            LazyColumn(contentPadding = PaddingValues(dimensionResource(R.dimen.space))) {
+                items(
+                    count = drivers.size,
+                    itemContent = { index ->
+                        DriverCard(
+                            modifier = modifier,
+                            driver = drivers[index],
+                            chooseAction = navigateToHistoryScreenAction,
+                        )
+                    },
+                )
+            }
         }
     }
+
+//TODO draw route
+@Composable
+fun RouteMap(originPosition: LatLng) {
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(originPosition, 15f)
+    }
+    GoogleMap(
+        modifier = Modifier.height(300.dp),
+        cameraPositionState = cameraPositionState,
+        uiSettings = MapUiSettings(
+            compassEnabled = false,
+            indoorLevelPickerEnabled = false,
+            mapToolbarEnabled = false,
+            myLocationButtonEnabled = false,
+            rotationGesturesEnabled = false,
+            scrollGesturesEnabled = false,
+            scrollGesturesEnabledDuringRotateOrZoom = false,
+            tiltGesturesEnabled = false,
+            zoomControlsEnabled = false,
+            zoomGesturesEnabled = false
+        ),
+    )
+}
 
 @Composable
 fun DriverCard(
@@ -70,7 +94,7 @@ fun DriverCard(
     modifier = modifier.padding(dimensionResource(R.dimen.space)),
     colors = CardColors(
         containerColor = MaterialTheme.colorScheme.primaryContainer,
-        contentColor = Color.DarkGray,
+        contentColor = Color.Black,
         disabledContainerColor = Color.DarkGray,
         disabledContentColor = Color.DarkGray
     )

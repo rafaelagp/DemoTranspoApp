@@ -12,11 +12,15 @@ import net.rafgpereira.transpoapp.R
 @Composable
 fun ScaffoldAndSurface(
     modifier: Modifier,
-    title: String,
+    title: String? = null,
     content: @Composable () -> Unit,
-) = Scaffold(
+) {
+    val appName = stringResource(R.string.app_name)
+    val screenTitle = if (title.isNullOrEmpty()) appName else "$appName: $title"
+
+    Scaffold(
         modifier = modifier.fillMaxSize(),
-        topBar = { ThemedTopAppBar(modifier, "${stringResource(R.string.app_name)}: $title") },
+        topBar = { ThemedTopAppBar(modifier, screenTitle) },
     ) { innerPadding ->
         Surface(
             modifier = modifier
@@ -25,3 +29,4 @@ fun ScaffoldAndSurface(
             content = content
         )
     }
+}

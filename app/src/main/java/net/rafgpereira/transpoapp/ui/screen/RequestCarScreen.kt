@@ -33,12 +33,8 @@ fun RequestCarScreen(
     var userId by remember { mutableStateOf("") }
     var originAddress by remember { mutableStateOf("") }
     var destinationAddress by remember { mutableStateOf("") }
-    val costEstimate by remember { mutableStateOf("") }
 
-    ScaffoldAndSurface(
-        modifier = modifier,
-        title = stringResource(R.string.requestcar_screen_title),
-    ) {
+    ScaffoldAndSurface(modifier = modifier) {
         Column(
             modifier = modifier
                 .padding(dimensionResource(R.dimen.screen_padding))
@@ -75,10 +71,6 @@ fun RequestCarScreen(
                     )
                 },
             )
-            CostEstimateFieldAndButton(
-                modifier = modifier,
-                costEstimate = costEstimate,
-            )
             //TODO add debounce
             //TODO add on-going request animation
             //TODO implement request
@@ -97,36 +89,6 @@ fun RequestCarScreen(
                 onClick = navigateToOptionsScreenAction,
             ) { Text(stringResource(R.string.requestcar_request_button_text),) }
         }
-    }
-}
-
-@Composable
-fun CostEstimateFieldAndButton(
-    modifier: Modifier,
-    costEstimate: String,
-) = Row(
-    horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.space)),
-    verticalAlignment = Alignment.CenterVertically,
-) {
-    TextField(
-        modifier = modifier.width(dimensionResource(R.dimen.small_textfield_width)),
-        value = costEstimate,
-        onValueChange = {},
-        label = { Text(text = stringResource(R.string.requestcar_estimatecost_field_title),) },
-        enabled = false,
-    )
-    //TODO add debounce
-    //TODO add on-going request animation
-    //TODO implement calculation request
-    FilledTonalButton(
-        modifier = modifier.width(dimensionResource(R.dimen.button_width)),
-        onClick = {},
-        contentPadding = PaddingValues(dimensionResource(R.dimen.zero_dp)),
-    ) {
-        Text(
-            text = stringResource(R.string.requestcar_calculate_button_text),
-            maxLines = 1,
-        )
     }
 }
 

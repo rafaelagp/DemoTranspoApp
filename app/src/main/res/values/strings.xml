@@ -5,13 +5,13 @@
     <string name="requestcar_destinationaddress_field_title">Endereço de Destino</string>
     <string name="requestcar_estimatecost_field_title">Estimativa de Custo</string>
     <string name="requestcar_calculate_button_text">Calcular</string>
-    <string name="requestcar_request_button_text">Solicitar</string>
+    <string name="requestcar_request_button_text">Estimar</string>
     <string name="requestcar_screen_title">Solicitar Corrida</string>
     <string name="requestcaroptions_screen_title">Opções</string>
     <string name="requestcaroptions_choose_button_text">Escolher</string>
-    <string name="requestcaroptions_cost_label">custo</string>
+    <string name="requestcaroptions_cost_label">valor</string>
     <string name="requestcaroptions_desc_label">descrição</string>
     <string name="requestcaroptions_rating_label">avaliação</string>
-    <string name="requestcaroptions_vehicle_label">carro</string>
+    <string name="requestcaroptions_vehicle_label">veículo</string>
     <string name="requestcaroptions_name_label">nome</string>
 </resources>
