@@ -38,6 +38,7 @@ fun MyNavHost(navController: NavHostController) =
                 modifier = Modifier,
                 hasBackStackEntry = navController.previousBackStackEntry != null,
                 navigateUpAction = { navController.navigateUp() },
+                drivers = fakeDrivers, //TODO remove fake data
             )
         }
     }

@@ -17,4 +17,5 @@
     <string name="history_screen_title">Histórico</string>
     <string name="history_filter_button_text">Filtrar</string>
     <string name="history_dropdown_label">Motorista</string>
+    <string name="history_dropdown_icon_desc">Ícone de Expansão</string>
 </resources>
