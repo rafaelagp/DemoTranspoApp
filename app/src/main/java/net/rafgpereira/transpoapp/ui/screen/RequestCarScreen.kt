@@ -69,7 +69,7 @@ fun RequestCarScreen(
                     )
                 },
             )
-            //TODO disable button on click, enable once request/nav finished
+            //TODO disable text fields and button on click, enable once request/nav finished
             //TODO add on-going request animation
             //TODO implement request
             Button(

@@ -14,4 +14,7 @@
     <string name="requestcaroptions_rating_label">avaliação</string>
     <string name="requestcaroptions_vehicle_label">veículo</string>
     <string name="requestcaroptions_name_label">nome</string>
+    <string name="history_screen_title">Histórico</string>
+    <string name="history_filter_button_text">Filtrar</string>
+    <string name="history_dropdown_label">Motorista</string>
 </resources>

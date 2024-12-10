@@ -5,9 +5,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import net.rafgpereira.transpoapp.domain.model.fakeDrivers
+import net.rafgpereira.transpoapp.ui.screen.HistoryScreen
 import net.rafgpereira.transpoapp.ui.screen.RequestCarOptionsScreen
 import net.rafgpereira.transpoapp.ui.screen.RequestCarScreen
-import net.rafgpereira.transpoapp.ui.screen.fakeDrivers
 
 @Composable
 fun MyNavHost(navController: NavHostController) =
@@ -28,6 +29,11 @@ fun MyNavHost(navController: NavHostController) =
                 modifier = Modifier,
                 drivers = fakeDrivers, //TODO remove fake data
                 navigateToHistoryScreenAction = { navController.navigate(Route.HistoryScreen) },
+            )
+        }
+        composable<Route.HistoryScreen> {
+            HistoryScreen(
+                modifier = Modifier,
             )
         }
     }
