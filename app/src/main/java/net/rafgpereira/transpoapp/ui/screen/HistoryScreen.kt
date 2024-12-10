@@ -61,6 +61,7 @@ fun DriverDropdownAndFilter(modifier: Modifier,) = Row(
     modifier = modifier.fillMaxWidth(),
     horizontalArrangement = Arrangement.SpaceBetween,
 ) {
+    //TODO replace text field with drop down listing drivers
     TextField(
         modifier = modifier.width(dimensionResource(R.dimen.small_textfield_width)),
         value = "",
