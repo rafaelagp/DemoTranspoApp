@@ -1,30 +1,33 @@
 package net.rafgpereira.transpoapp.ui.screen
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.withContext
 import net.rafgpereira.transpoapp.R
+import net.rafgpereira.transpoapp.ui.common.ErrorAlertDialog
 import net.rafgpereira.transpoapp.ui.common.ScaffoldAndSurface
 import net.rafgpereira.transpoapp.ui.viewmodel.RequestCarViewModel
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
 fun RequestCarScreen(
     modifier: Modifier,
@@ -32,8 +35,10 @@ fun RequestCarScreen(
     navigateToOptionsScreenAction: () -> Unit,
 ) {
     val userId = viewModel?.userId ?: MutableStateFlow("")
-    val originAddress = viewModel?.origin ?: MutableStateFlow("")
-    val destinationAddress = viewModel?.destination ?: MutableStateFlow("")
+    val origin = viewModel?.origin ?: MutableStateFlow("")
+    val destination = viewModel?.destination ?: MutableStateFlow("")
+    val errorMessage = viewModel?.errorMessage?.collectAsState("")?.value
+    val isBusyState = viewModel?.isBusy ?: MutableStateFlow(false)
 
     ScaffoldAndSurface(modifier = modifier) {
         Column(
@@ -42,7 +47,7 @@ fun RequestCarScreen(
                 .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(
                 space = dimensionResource(R.dimen.space),
-                alignment = Alignment.CenterVertically,
+                alignment = Alignment.Top,
             ),
             horizontalAlignment = Alignment.Start,
         ) {
@@ -53,28 +58,28 @@ fun RequestCarScreen(
                 label = {
                     Text(text = stringResource(R.string.requestcar_userid_field_title),)
                 },
+                enabled = !isBusyState.collectAsState().value,
             )
             TextField(
                 modifier = modifier.fillMaxWidth(),
-                value = originAddress.collectAsState().value,
-                onValueChange = { originAddress.value = it },
+                value = origin.collectAsState().value,
+                onValueChange = { origin.value = it },
                 label = {
                     Text(text = stringResource(R.string.requestcar_originaddress_field_title),)
                 },
+                enabled = !isBusyState.collectAsState().value,
             )
             TextField(
                 modifier = modifier.fillMaxWidth(),
-                value = destinationAddress.collectAsState().value,
-                onValueChange = { destinationAddress.value = it },
+                value = destination.collectAsState().value,
+                onValueChange = { destination.value = it },
                 label = {
                     Text(text =
                         stringResource(R.string.requestcar_destinationaddress_field_title),
                     )
                 },
+                enabled = !isBusyState.collectAsState().value,
             )
-            //TODO disable text fields and button on click, enable once request/nav finished
-            //TODO add on-going request animation
-            //TODO implement request
             Button(
                 modifier = modifier
                     .padding(
@@ -91,7 +96,19 @@ fun RequestCarScreen(
                     viewModel?.estimate()
                     //navigateToOptionsScreenAction()
                 },
-            ) { Text(stringResource(R.string.requestcar_request_button_text),) }
+                enabled = !isBusyState.collectAsState().value,
+            ) {
+                if (isBusyState.collectAsState().value)
+                    CircularProgressIndicator(
+                        modifier.size(dimensionResource(R.dimen.progress_indicator_size)),
+                    )
+                else Text(stringResource(R.string.requestcar_request_button_text),)
+            }
+        }
+
+        if (errorMessage != null && errorMessage.isEmpty().not()) {
+            val showAlertState = mutableStateOf(true)
+            ErrorAlertDialog(modifier, errorMessage, showAlertState)
         }
     }
 }

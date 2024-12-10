@@ -18,4 +18,7 @@
     <string name="history_filter_button_text">Filtrar</string>
     <string name="history_dropdown_label">Motorista</string>
     <string name="history_dropdown_icon_desc">Ícone de Expansão</string>
+    <string name="error_dialog_title">Erro</string>
+    <string name="error_dialog_button">OK</string>
+    <string name="error_dialog_preview_message">Erro de motorista não informado</string>
 </resources>

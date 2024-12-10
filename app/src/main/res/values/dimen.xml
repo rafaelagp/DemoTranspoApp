@@ -9,4 +9,5 @@
     <dimen name="zero_dp">0dp</dimen>
     <dimen name="small_textfield_width">200dp</dimen>
     <dimen name="button_width">150dp</dimen>
+    <dimen name="progress_indicator_size">25dp</dimen>
 </resources>
