@@ -5,7 +5,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import net.rafgpereira.transpoapp.ui.screen.RequestCarOptionsScreen
 import net.rafgpereira.transpoapp.ui.screen.RequestCarScreen
+import net.rafgpereira.transpoapp.ui.screen.fakeDrivers
 
 @Composable
 fun MyNavHost(navController: NavHostController) =
@@ -14,6 +16,18 @@ fun MyNavHost(navController: NavHostController) =
         startDestination = Route.RequestCarScreen
     ) {
         composable<Route.RequestCarScreen> {
-            RequestCarScreen(Modifier)
+            RequestCarScreen(
+                modifier = Modifier,
+                navigateToOptionsScreenAction = {
+                    navController.navigate(Route.RequestCarOptionsScreen)
+                },
+            )
+        }
+        composable<Route.RequestCarOptionsScreen> {
+            RequestCarOptionsScreen(
+                modifier = Modifier,
+                drivers = fakeDrivers, //TODO remove fake data
+                navigateToHistoryScreenAction = { navController.navigate(Route.HistoryScreen) },
+            )
         }
     }

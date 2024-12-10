@@ -7,4 +7,10 @@ sealed class Route {
 
     @Serializable
     data object RequestCarScreen : Route()
+
+    @Serializable
+    data object RequestCarOptionsScreen : Route()
+
+    @Serializable
+    data object HistoryScreen : Route()
 }
