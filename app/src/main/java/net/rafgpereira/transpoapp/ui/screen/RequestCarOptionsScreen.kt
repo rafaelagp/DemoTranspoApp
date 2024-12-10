@@ -34,6 +34,7 @@ import net.rafgpereira.transpoapp.ui.common.ScaffoldAndSurface
 
 val fakeOriginLatLng = LatLng(-23.5215624, -46.763286699999995)
 
+//TODO disable all buttons on click and enable once request/nav finished
 //TODO add navigate back arrow
 @Composable
 fun RequestCarOptionsScreen(
@@ -123,6 +124,7 @@ fun DriverCard(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             LabelAndInformation(stringResource(R.string.requestcaroptions_cost_label), driver.cost)
+            //TODO add on-going request animation
             Button(
                 modifier = modifier.width(dimensionResource(R.dimen.button_width)),
                 onClick = chooseAction,

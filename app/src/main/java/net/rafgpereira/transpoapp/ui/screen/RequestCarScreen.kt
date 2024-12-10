@@ -3,13 +3,11 @@ package net.rafgpereira.transpoapp.ui.screen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -71,7 +69,7 @@ fun RequestCarScreen(
                     )
                 },
             )
-            //TODO add debounce
+            //TODO disable button on click, enable once request/nav finished
             //TODO add on-going request animation
             //TODO implement request
             Button(
