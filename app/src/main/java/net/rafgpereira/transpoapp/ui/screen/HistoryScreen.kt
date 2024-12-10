@@ -26,9 +26,13 @@ import net.rafgpereira.transpoapp.ui.common.ScaffoldAndSurface
 @Composable
 fun HistoryScreen(
     modifier: Modifier,
+    hasBackStackEntry: Boolean,
+    navigateUpAction: (() -> Unit)?,
 ) = ScaffoldAndSurface(
     modifier = modifier,
     title = stringResource(R.string.history_screen_title),
+    hasBackStackEntry = hasBackStackEntry,
+    navigateUpAction = navigateUpAction,
 ) {
     val userId by remember { mutableStateOf("") }
 
@@ -74,4 +78,4 @@ fun DriverDropdownAndFilter(modifier: Modifier,) = Row(
 
 @Composable
 @Preview(showSystemUi = true, showBackground = true)
-fun HistoryScreenPreview() = HistoryScreen(Modifier)
+fun HistoryScreenPreview() = HistoryScreen(Modifier, true) {}

@@ -29,11 +29,15 @@ fun MyNavHost(navController: NavHostController) =
                 modifier = Modifier,
                 drivers = fakeDrivers, //TODO remove fake data
                 navigateToHistoryScreenAction = { navController.navigate(Route.HistoryScreen) },
+                hasBackStackEntry = navController.previousBackStackEntry != null,
+                navigateUpAction = { navController.navigateUp() },
             )
         }
         composable<Route.HistoryScreen> {
             HistoryScreen(
                 modifier = Modifier,
+                hasBackStackEntry = navController.previousBackStackEntry != null,
+                navigateUpAction = { navController.navigateUp() },
             )
         }
     }

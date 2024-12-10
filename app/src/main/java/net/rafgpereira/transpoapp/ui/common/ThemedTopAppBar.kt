@@ -1,6 +1,10 @@
 package net.rafgpereira.transpoapp.ui.common
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -14,6 +18,8 @@ import androidx.compose.ui.tooling.preview.Preview
 fun ThemedTopAppBar(
     modifier: Modifier,
     title: String,
+    hasBackStackEntry: Boolean = false,
+    navigateUpAction: (() -> Unit)? = null,
 ) = TopAppBar(
     modifier = modifier,
     title = { Text(title) },
@@ -23,6 +29,19 @@ fun ThemedTopAppBar(
         navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
         actionIconContentColor = MaterialTheme.colorScheme.onSecondary
     ),
+    navigationIcon = {
+        if (hasBackStackEntry && navigateUpAction != null) {
+            IconButton(onClick = { navigateUpAction() }) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Back"
+                )
+            }
+        } else {
+            @Suppress("UNUSED_EXPRESSION")
+            null
+        }
+    }
 )
 
 @Composable

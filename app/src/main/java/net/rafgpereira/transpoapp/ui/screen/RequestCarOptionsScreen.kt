@@ -41,9 +41,13 @@ fun RequestCarOptionsScreen(
     modifier: Modifier,
     drivers: Array<TempDriver>,
     navigateToHistoryScreenAction: () -> Unit, //TODO pass driver thru action?
+    hasBackStackEntry: Boolean,
+    navigateUpAction: (() -> Unit)?,
 ) = ScaffoldAndSurface(
         modifier = modifier,
         title = stringResource(R.string.requestcaroptions_screen_title),
+        hasBackStackEntry = hasBackStackEntry,
+        navigateUpAction = navigateUpAction,
     ) {
         Column {
             RouteMap(fakeOriginLatLng)
@@ -160,4 +164,5 @@ fun DriverCardPreview() = DriverCard(Modifier, fakeDrivers[0]) {}
 
 @Composable
 @Preview(showSystemUi = true, showBackground = true)
-fun RequestCarOptionsScreenPreview() = RequestCarOptionsScreen(Modifier, fakeDrivers) {}
+fun RequestCarOptionsScreenPreview() = RequestCarOptionsScreen(
+    Modifier, fakeDrivers, {}, true) {}
