@@ -11,26 +11,29 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.withContext
 import net.rafgpereira.transpoapp.R
 import net.rafgpereira.transpoapp.ui.common.ScaffoldAndSurface
+import net.rafgpereira.transpoapp.ui.viewmodel.RequestCarViewModel
 
 @Composable
 fun RequestCarScreen(
     modifier: Modifier,
+    viewModel: RequestCarViewModel?,
     navigateToOptionsScreenAction: () -> Unit,
 ) {
-    var userId by remember { mutableStateOf("") }
-    var originAddress by remember { mutableStateOf("") }
-    var destinationAddress by remember { mutableStateOf("") }
+    val userId = viewModel?.userId ?: MutableStateFlow("")
+    val originAddress = viewModel?.origin ?: MutableStateFlow("")
+    val destinationAddress = viewModel?.destination ?: MutableStateFlow("")
 
     ScaffoldAndSurface(modifier = modifier) {
         Column(
@@ -45,24 +48,24 @@ fun RequestCarScreen(
         ) {
             TextField(
                 modifier = modifier.width(dimensionResource(R.dimen.small_textfield_width)),
-                value = userId,
-                onValueChange = { userId = it },
+                value = userId.collectAsState().value,
+                onValueChange = { userId.value = it },
                 label = {
                     Text(text = stringResource(R.string.requestcar_userid_field_title),)
                 },
             )
             TextField(
                 modifier = modifier.fillMaxWidth(),
-                value = originAddress,
-                onValueChange = { originAddress = it },
+                value = originAddress.collectAsState().value,
+                onValueChange = { originAddress.value = it },
                 label = {
                     Text(text = stringResource(R.string.requestcar_originaddress_field_title),)
                 },
             )
             TextField(
                 modifier = modifier.fillMaxWidth(),
-                value = destinationAddress,
-                onValueChange = { destinationAddress = it },
+                value = destinationAddress.collectAsState().value,
+                onValueChange = { destinationAddress.value = it },
                 label = {
                     Text(text =
                         stringResource(R.string.requestcar_destinationaddress_field_title),
@@ -84,7 +87,10 @@ fun RequestCarScreen(
                     )
                     .align(Alignment.CenterHorizontally)
                     .width(dimensionResource(R.dimen.button_width)),
-                onClick = navigateToOptionsScreenAction,
+                onClick = {
+                    viewModel?.estimate()
+                    //navigateToOptionsScreenAction()
+                },
             ) { Text(stringResource(R.string.requestcar_request_button_text),) }
         }
     }
@@ -92,4 +98,4 @@ fun RequestCarScreen(
 
 @Composable
 @Preview(showSystemUi = true, showBackground = true)
-fun RequestCarScreenPreview() = RequestCarScreen(Modifier) {}
+fun RequestCarScreenPreview() = RequestCarScreen(Modifier, null) {}

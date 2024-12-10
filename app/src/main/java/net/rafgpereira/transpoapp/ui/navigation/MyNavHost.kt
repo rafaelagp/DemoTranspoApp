@@ -9,6 +9,8 @@ import net.rafgpereira.transpoapp.domain.model.fakeDrivers
 import net.rafgpereira.transpoapp.ui.screen.HistoryScreen
 import net.rafgpereira.transpoapp.ui.screen.RequestCarOptionsScreen
 import net.rafgpereira.transpoapp.ui.screen.RequestCarScreen
+import net.rafgpereira.transpoapp.ui.viewmodel.RequestCarViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun MyNavHost(navController: NavHostController) =
@@ -19,6 +21,7 @@ fun MyNavHost(navController: NavHostController) =
         composable<Route.RequestCarScreen> {
             RequestCarScreen(
                 modifier = Modifier,
+                viewModel = hiltViewModel<RequestCarViewModel>(),
                 navigateToOptionsScreenAction = {
                     navController.navigate(Route.RequestCarOptionsScreen)
                 },

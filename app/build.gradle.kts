@@ -83,6 +83,9 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     implementation(libs.hilt.android)
+    implementation(libs.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
     implementation(libs.maps.compose)
+    implementation(libs.retrofit.core)
+    implementation(libs.retrofit.converter.gson)
 }
