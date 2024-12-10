@@ -7,6 +7,12 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     // Hilt Dependency Injection
     alias(libs.plugins.dagger.hilt)
+    alias(libs.plugins.secrets.gradle.plugin)
+}
+
+secrets {
+    propertiesFileName = "secrets.properties"
+    defaultPropertiesFileName = "local.defaults.properties"
 }
 
 android {
@@ -78,4 +84,5 @@ dependencies {
     implementation(libs.room.ktx)
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+    implementation(libs.maps.compose)
 }

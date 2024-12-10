@@ -8,4 +8,5 @@ plugins {
     alias(libs.plugins.kotlin.serialization) apply false
     // Hilt Dependency Injection
     alias(libs.plugins.dagger.hilt) apply false
+    alias(libs.plugins.secrets.gradle.plugin) apply false
 }
