@@ -15,7 +15,7 @@ val fakeDrivers = listOf(
         "Olá! Sou o Homer, seu motorista camarada! Relaxe e aproveite o passeio, com direito a rosquinhas e boas risadas (e talvez alguns desvios).",
         "Plymouth Valiant 1973 rosa e enferrujado",
         DriverReview(
-            10,
+            2,
             "Motorista simpático, mas errou o caminho 3 vezes. O carro cheira a donuts."),
         50.05),
     Driver(2,

@@ -13,7 +13,7 @@
     <string name="requestcaroptions_desc_label">descrição</string>
     <string name="requestcaroptions_rating_label">avaliação</string>
     <string name="requestcaroptions_vehicle_label">veículo</string>
-    <string name="requestcaroptions_name_label">nome</string>
+    <string name="requestcaroptions_name_label">nome do motorista</string>
     <string name="history_screen_title">Histórico</string>
     <string name="history_filter_button_text">Filtrar</string>
     <string name="history_dropdown_label">Motorista</string>
@@ -21,4 +21,7 @@
     <string name="error_dialog_title">Erro</string>
     <string name="error_dialog_button">OK</string>
     <string name="error_dialog_preview_message">Erro de motorista não informado</string>
+    <string name="requestcaroptions_routemap_desc">Mapa estático da rota</string>
+    <string name="requestcaroptions_rating_star_desc">Avaliação em estrelas</string>
+    <string name="requestcaroptions_rating_max_star_desc">Máximo de estrelas</string>
 </resources>
