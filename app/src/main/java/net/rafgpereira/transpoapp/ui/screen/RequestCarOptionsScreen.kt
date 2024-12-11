@@ -27,6 +27,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
+import net.rafgpereira.transpoapp.BuildConfig
 import net.rafgpereira.transpoapp.R
 import net.rafgpereira.transpoapp.domain.model.Driver
 import net.rafgpereira.transpoapp.domain.model.fakeDrivers
@@ -64,7 +65,11 @@ fun RequestCarOptionsScreen(
         }
     }
 
-//TODO draw route
+val encodedPolyline = "v`qnCpml|Ga@~Am@rB]lAYpA]|AS`AQz@YfAUz@Ox@G^Gz@ATMlAKx@I`@EVGZC\\\\AF?H?J@LBLBPH\\\\FTFR@LBJ@^?b@@|@@pA?bA?F@N@FBDDHVVVDB?D@VDVHB?XJPHPHHFHH@@LRJXDR@FF\\\\Fr@FVT|BR`CDd@JlAVpBHt@LfALtAH`AH|@JpADdA@b@Aj@?JEzAC`AI|AC^Cf@CVGx@E`@]vCaAKcAMXoCXqCBa@Dm@@c@Bg@?E?k@A}@ASEw@OsAWiACUIi@My@AM?K?K?KBSDODQFQ@I@E@[JOV]d@k@`@e@Z[X[V]JMLO^m@Ni@Je@Fa@B_@@M@K?]Ae@Ei@CUCMEWIe@Ia@o@_EKk@Ge@Kq@SmAW{BGm@Ci@Cu@?[?Q@e@?a@NsBHsAJo@TgAZyAViAXsA\\\\wAVaAV}@rAmFTkADSh@wCF[Jg@DW@I?E?EAEXoARy@p@}CDSn@qC\\\\eB|@uDl@kCHe@Pu@|@yD\\\\oAT{@f@sBb@kBh@sBHa@BIJg@n@aCLe@Nm@H]DOBIFQHWFOFOJSLSNQBETUPOPMHGNIVMRILENEJALCLCLAHANAT?B?LAR?d@@@?`@@J?|@Bt@@r@B^AlC@H?`@A^APCXANCZCPEVEPCHCHCTINERIDCHE~@g@v@g@ROVU`@]d@g@JIZ[JKJKDCDCFAFA`@e@bAmAt@y@RSrCeDn@u@j@q@b@g@hCyChEcFrI{J|@eAn@u@j@o@^c@`EyEvGyHlDcEZ_@\\\\c@b@m@RWdA{ALSpAkBl@w@n@w@DGPS@ANQ@C`@a@f@i@`AaAn@k@VU`B}A|@}@`@c@RWRU`@k@bAuAv@oAHMz@wABCLMXk@rEgLfCwGrKsX|EgMNa@vCwHdIySL]nBeFt@kBNa@j@yANYnBmFjAaD`AeCRc@Ri@z@wBTq@Tm@Zs@LUf@aAZi@^k@Ze@d@k@V[`@c@h@k@b@a@d@a@XUj@a@XQd@[f@Yr@_@|@_@FCf@S\\\\KZKf@Oj@QfCq@fFsAbCo@rGcBfEoA@C`@ODCJEh@WjC_BLGhAu@b@c@j@i@^_@b@a@b@a@LK\\\\Yb@[z@k@JG^WTOPQdA_ARUHIBADAXCxBaCTWPWLM|@aAt@w@^a@h@g@p@k@p@i@z@m@`Am@vAs@vAs@bF_C|BgADCzBcAfCmAfCmA|E_CDA^Or@[`@Ov@_@hB}@n@[f@KPGv@YjBo@XKTE\\\\GPCf@Cl@Ap@@vABlAJXDV\\\\@@BDDH@D@B?D?D?@AJADCFCBE@EBC@G@WBs@CS?IAMCUMGGAAACCG?S?GAIAIEK?M?MCmCAa@?C?G?]EyCAQ?SCUAOMm@EIOQm@o@SUc@e@a@a@OOi@]YYIGwA{Ai@m@CG[[SSOCA?AAECQQm@q@CCg@k@c@g@eAkASSEEMMKM[YY[gBiBs@u@Y[s@u@GKGIQQSQ]a@q@w@{@}@KQIMCIAAESCO?GCM?o@?EDkB?]Ag@@I?OHe@@C@CHKB_B?S@uA@c@@c@?I@Y?S?WAYAQA]C]E]E[ESESCMCICQEOAIKWISEKSSkA_C]m@sAmCwBcEGOqAgCyAsCKMc@{@ISGMIUGUCMAGAGAC?C?A@A@AAGCWCMCQ?Y?Q@s@?YA[AGGe@AG?EG_@G]CMOg@m@_A]g@ACMSy@oAu@kAc@s@qAqBk@}@a@o@iAeBeA_BMQKOOUIOcAaBc@o@kAgBa@m@U]m@{@ACQYIMMQs@iAkAiBq@aAIQOYW_@a@m@GIQWMOKQMQQQk@k@[Yg@g@[YUSsEkEUUOOu@u@A?o@m@WWOOMKIKSQw@u@][UWUUu@s@_@_@WWk@i@c@a@a@]MMGGIIGGAG?CCGMUACCCEEKIOIOKIEa@QYKKCUIEAICIEGC[^MPSVUZCDOP[b@QTu@y@UWKKAAm@o@e@e@o@q@CCo@q@k@o@ECSUGGKKm@t@CDIHUXCD"
+val mapsApiKey = BuildConfig.MAPS_API_KEY
+val staticMapUrl = "https://maps.googleapis.com/maps/api/staticmapsize=400x400&center=59.900503,-135.478011&zoom=4&path=weight:3%7Ccolor:orange%7Cenc:${encodedPolyline}&key=${mapsApiKey}"
+
+//TODO replace with image loading static map url
 @Composable
 fun RouteMap(originPosition: LatLng) {
     val cameraPositionState = rememberCameraPositionState {

@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -15,6 +18,10 @@ secrets {
     defaultPropertiesFileName = "local.defaults.properties"
 }
 
+val secretsPropertiesFile = rootProject.file("secrets.properties")
+val secretsProperties = Properties()
+secretsProperties.load(FileInputStream(secretsPropertiesFile))
+
 android {
     namespace = "net.rafgpereira.transpoapp"
     compileSdk = 35
@@ -31,6 +38,10 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildConfigField(
+            "String", "MAPS_API_KEY", secretsProperties["MAPS_API_KEY"].toString()
+        )
     }
 
     buildTypes {
@@ -51,6 +62,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
