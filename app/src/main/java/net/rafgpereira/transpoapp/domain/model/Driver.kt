@@ -3,10 +3,10 @@ package net.rafgpereira.transpoapp.domain.model
 data class Driver(
     val id: Long,
     val name: String,
-    val description: String,
-    val vehicle: String,
-    val review: DriverReview,
-    val value: Double
+    val description: String?,
+    val vehicle: String?,
+    val review: DriverReview?,
+    val value: Double?
 )
 
 val fakeDrivers = arrayOf(

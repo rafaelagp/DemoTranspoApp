@@ -3,19 +3,19 @@ package net.rafgpereira.transpoapp.data.model
 import net.rafgpereira.transpoapp.domain.model.Driver
 import net.rafgpereira.transpoapp.domain.model.LatLng
 
-data class EstimateResponse(
+data class EstimateResult(
     val origin: LatLng,
     val destination: LatLng,
     val duration: Long,
     val options: List<Driver>,
-    val routeResponse: EstimateResponseRouteResult
+    val routeResponse: EstimateRouteResult
 )
 
-data class EstimateResponseRouteResult(
-    val routes: List<EstimateResponseRoute>
+data class EstimateRouteResult(
+    val routes: List<RouteResult>
 )
 
-data class EstimateResponseRoute(
+data class RouteResult(
     val legs: List<Leg>
 )
 

@@ -11,6 +11,7 @@ import net.rafgpereira.transpoapp.data.model.EstimateRequestBody
 import net.rafgpereira.transpoapp.data.network.IApiService
 import net.rafgpereira.transpoapp.data.network.getJsonObject
 import net.rafgpereira.transpoapp.domain.model.Driver
+import net.rafgpereira.transpoapp.domain.model.Ride
 import net.rafgpereira.transpoapp.domain.model.RouteStep
 import net.rafgpereira.transpoapp.domain.repository.IRepository
 import retrofit2.Response
@@ -21,6 +22,9 @@ class Repository @Inject constructor(
 ) : IRepository {
     private val _drivers = MutableStateFlow<List<Driver>>(listOf())
     override val drivers = _drivers.asStateFlow()
+
+    private val _rides = MutableStateFlow<List<Ride>>(listOf())
+    override val rides = _rides.asStateFlow()
 
     private val _route = MutableStateFlow<List<RouteStep>>(listOf())
     override val route = _route.asStateFlow()
@@ -79,6 +83,24 @@ class Repository @Inject constructor(
             ).let { result ->
                 if (result.isSuccessful) onSuccess()
                 else handleFailedRequest(result, onFailure)
+            }
+        } catch (ex: Exception) {
+            handleException(ex, onFailure)
+        }
+    }
+
+    override suspend fun getHistory(
+        userId: String,
+        driverId: Long,
+        onSuccess: () -> Unit,
+        onFailure: () -> Unit,
+    ) {
+        try {
+            apiService.getHistory(userId, driverId).let { result ->
+                if (result.isSuccessful) {
+                    result.body()?.rides?.let { _rides.emit(it) }
+                    onSuccess()
+                } else handleFailedRequest(result, onFailure)
             }
         } catch (ex: Exception) {
             handleException(ex, onFailure)

@@ -111,16 +111,21 @@ fun DriverCard(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             LabelAndInformation(stringResource(R.string.requestcaroptions_name_label), driver.name)
-            LabelAndInformation(
-                stringResource(R.string.requestcaroptions_vehicle_label), driver.vehicle
-            )
+            driver.vehicle?.let {
+                LabelAndInformation(
+                    stringResource(R.string.requestcaroptions_vehicle_label), it
+                )
+            }
             LabelAndInformation(
                 stringResource(R.string.requestcaroptions_rating_label),
-                    driver.review.rating.toString()
+                    driver.review?.rating.toString()
             )
         }
-        if (driver.description.isEmpty().not()) {
-            LabelAndInformation(stringResource(R.string.requestcaroptions_desc_label), driver.description)
+        if (driver.description?.isEmpty()?.not() == true) {
+            LabelAndInformation(
+                stringResource(R.string.requestcaroptions_desc_label),
+                driver.description
+            )
         }
         Row(
             modifier = modifier.fillMaxWidth(),
