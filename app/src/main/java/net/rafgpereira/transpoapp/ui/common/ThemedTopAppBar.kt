@@ -18,7 +18,6 @@ import androidx.compose.ui.tooling.preview.Preview
 fun ThemedTopAppBar(
     modifier: Modifier,
     title: String,
-    hasBackStackEntry: Boolean = false,
     navigateUpAction: (() -> Unit)? = null,
 ) = TopAppBar(
     modifier = modifier,
@@ -30,7 +29,7 @@ fun ThemedTopAppBar(
         actionIconContentColor = MaterialTheme.colorScheme.onSecondary
     ),
     navigationIcon = {
-        if (hasBackStackEntry && navigateUpAction != null) {
+        if (navigateUpAction != null) {
             IconButton(onClick = { navigateUpAction() }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,

@@ -28,8 +28,8 @@ class RequestCarViewModel @Inject constructor(private val repository: IRepositor
     private val _errorMessage = MutableSharedFlow<String>()
     val errorMessage = _errorMessage.asSharedFlow()
 
-    private val _navigateToOptions = MutableSharedFlow<Boolean>()
-    val shouldNavigateToOptions = _navigateToOptions.asSharedFlow()
+    private val _shouldNavigateToOptions = MutableSharedFlow<Boolean>()
+    val shouldNavigateToOptions = _shouldNavigateToOptions.asSharedFlow()
 
     fun estimate() = viewModelScope.launch {
         _isBusy.value = true
@@ -39,7 +39,7 @@ class RequestCarViewModel @Inject constructor(private val repository: IRepositor
                 origin = origin.value,
                 destination = destination.value
             )
-            _navigateToOptions.emit(true)
+            _shouldNavigateToOptions.emit(true)
         } catch (ex: Exception) {
             //TODO improve exception handling
             ex.message?.let { _errorMessage.emit(it) }
@@ -49,6 +49,10 @@ class RequestCarViewModel @Inject constructor(private val repository: IRepositor
 
     fun clearErrorMessage() = viewModelScope.launch {
         _errorMessage.emit("")
+    }
+
+    fun clearShouldNavigateToOptions() = viewModelScope.launch {
+        _shouldNavigateToOptions.emit(false)
     }
 
     fun clearIsBusy() { _isBusy.value = false }

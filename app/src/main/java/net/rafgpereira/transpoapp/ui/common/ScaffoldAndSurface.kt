@@ -13,7 +13,6 @@ import net.rafgpereira.transpoapp.R
 fun ScaffoldAndSurface(
     modifier: Modifier,
     title: String? = null,
-    hasBackStackEntry: Boolean = false,
     navigateUpAction: (() -> Unit)? = null,
     content: @Composable () -> Unit,
 ) {
@@ -26,7 +25,6 @@ fun ScaffoldAndSurface(
             ThemedTopAppBar(
                 modifier = modifier,
                 title = screenTitle,
-                hasBackStackEntry = hasBackStackEntry,
                 navigateUpAction = navigateUpAction
             )
         },

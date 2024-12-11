@@ -109,6 +109,7 @@ fun RequestCarScreen(
 
         if (shouldNavigateToOptions != null && shouldNavigateToOptions) {
             navigateToOptionsScreenAction()
+            viewModel.clearShouldNavigateToOptions()
             viewModel.clearIsBusy()
         }
     }

@@ -41,13 +41,11 @@ import net.rafgpereira.transpoapp.ui.common.ScaffoldAndSurface
 @Composable
 fun HistoryScreen(
     modifier: Modifier,
-    hasBackStackEntry: Boolean,
     navigateUpAction: (() -> Unit)?,
     drivers: Array<TempDriver>,
 ) = ScaffoldAndSurface(
     modifier = modifier,
     title = stringResource(R.string.history_screen_title),
-    hasBackStackEntry = hasBackStackEntry,
     navigateUpAction = navigateUpAction,
 ) {
     var userId by remember { mutableStateOf("") }
@@ -158,4 +156,4 @@ fun DriverDropdownMenuPreview() = DriverDropdownMenu(Modifier, fakeDrivers, true
 
 @Composable
 @Preview(showSystemUi = true, showBackground = true)
-fun HistoryScreenPreview() = HistoryScreen(Modifier, true, {}, fakeDrivers)
+fun HistoryScreenPreview() = HistoryScreen(Modifier, {}, fakeDrivers)
