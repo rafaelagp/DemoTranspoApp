@@ -9,7 +9,7 @@ import net.rafgpereira.transpoapp.domain.model.Ride
 interface IRepository {
     val errorMessage: SharedFlow<String?>
     val drivers: StateFlow<List<Driver>>
-    val rides: StateFlow<List<Ride>>
+    val rideHistory: StateFlow<List<Ride>>
     val route: StateFlow<List<LatLng>>
 
     suspend fun getEstimate(
@@ -21,12 +21,7 @@ interface IRepository {
     )
 
     suspend fun confirm(
-        userId: String,
-        origin: String,
-        destination: String,
-        distance: Long,
-        duration: String,
-        driverId: Long,
+        driverId: Int,
         driverName: String,
         value: Double,
         onSuccess: () -> Unit,
@@ -35,7 +30,7 @@ interface IRepository {
 
     suspend fun getHistory(
         userId: String,
-        driverId: Long,
+        driverId: Int,
         onSuccess: () -> Unit,
         onFailure: () -> Unit,
     )

@@ -14,6 +14,8 @@ import net.rafgpereira.transpoapp.domain.model.Driver
 import net.rafgpereira.transpoapp.domain.model.LatLng
 import net.rafgpereira.transpoapp.domain.model.Ride
 import net.rafgpereira.transpoapp.domain.repository.IRepository
+import net.rafgpereira.transpoapp.util.driverIdToValidDistance
+import net.rafgpereira.transpoapp.util.isValidDistanceFor
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -24,13 +26,19 @@ class Repository @Inject constructor(
     override val drivers = _drivers.asStateFlow()
 
     private val _rides = MutableStateFlow<List<Ride>>(listOf())
-    override val rides = _rides.asStateFlow()
+    override val rideHistory = _rides.asStateFlow()
 
     private val _route = MutableStateFlow<List<LatLng>>(listOf())
     override val route = _route.asStateFlow()
 
     private val _errorMessage = MutableSharedFlow<String?>()
     override val errorMessage = _errorMessage.asSharedFlow()
+
+    private var rideDistance = 0
+    private var rideDuration = 0
+    private var rideUserId = ""
+    private var rideOrigin = ""
+    private var rideDestination = ""
 
     override suspend fun getEstimate(
         userId: String,
@@ -39,20 +47,28 @@ class Repository @Inject constructor(
         onSuccess: () -> Unit,
         onFailure: () -> Unit,
     ) {
+        rideUserId = userId
+        rideOrigin = origin
+        rideDestination = destination
+
         try {
             apiService.getEstimate(EstimateRequestBody(userId, origin, destination)).let { result ->
                 if (result.isSuccessful) {
-                    result.body()?.options?.let { _drivers.emit(it) }
-                    val steps = mutableListOf<LatLng>()
-                    result.body()?.routeResponse?.routes?.forEach { route ->
-                        route.legs.forEach { leg ->
-                            leg.steps.forEach { step ->
-                                steps.add(step.startLocation.latLng)
-                                steps.add(step.endLocation.latLng)
+                    result.body()?.let { body ->
+                        rideDistance = body.distance
+                        rideDuration = body.duration
+                        _drivers.emit(body.options)
+                        val steps = mutableListOf<LatLng>()
+                        body.routeResponse.routes.forEach { route ->
+                            route.legs.forEach { leg ->
+                                leg.steps.forEach { step ->
+                                    steps.add(step.startLocation.latLng)
+                                    steps.add(step.endLocation.latLng)
+                                }
                             }
                         }
+                        _route.emit(steps)
                     }
-                    _route.emit(steps)
                     onSuccess()
                 } else handleFailedRequest(result, onFailure)
             }
@@ -62,17 +78,20 @@ class Repository @Inject constructor(
     }
 
     override suspend fun confirm(
-        userId: String,
-        origin: String,
-        destination: String,
-        distance: Long,
-        duration: String,
-        driverId: Long,
+        driverId: Int,
         driverName: String,
         value: Double,
         onSuccess: () -> Unit,
         onFailure: () -> Unit,
     ) {
+        val distance =
+            if (rideDistance.isValidDistanceFor(driverId)) rideDistance.toString()
+            else driverId.driverIdToValidDistance().toString()
+        val duration = rideDuration.toString()
+        val userId = rideUserId
+        val origin = rideOrigin
+        val destination = rideDestination
+
         try {
             apiService.confirm(
                 ConfirmRequestBody(
@@ -90,7 +109,7 @@ class Repository @Inject constructor(
 
     override suspend fun getHistory(
         userId: String,
-        driverId: Long,
+        driverId: Int,
         onSuccess: () -> Unit,
         onFailure: () -> Unit,
     ) {

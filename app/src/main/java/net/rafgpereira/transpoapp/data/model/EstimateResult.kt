@@ -6,7 +6,8 @@ import net.rafgpereira.transpoapp.domain.model.LatLng
 data class EstimateResult(
     val origin: LatLng,
     val destination: LatLng,
-    val duration: Long,
+    val distance: Int,
+    val duration: Int,
     val options: List<Driver>,
     val routeResponse: EstimateRouteResult
 )

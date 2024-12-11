@@ -33,7 +33,9 @@ import net.rafgpereira.transpoapp.util.StaticMapsUrl
 import net.rafgpereira.transpoapp.domain.model.Driver
 import net.rafgpereira.transpoapp.domain.model.MAX_RATING
 import net.rafgpereira.transpoapp.domain.model.fakeDrivers
+import net.rafgpereira.transpoapp.ui.common.ErrorAlertDialog
 import net.rafgpereira.transpoapp.ui.common.ScaffoldAndSurface
+import net.rafgpereira.transpoapp.ui.common.UiState
 import net.rafgpereira.transpoapp.ui.viewmodel.RequestCarOptionsViewModel
 import java.text.NumberFormat
 
@@ -45,9 +47,18 @@ fun RequestCarOptionsScreen(
     navigateToHistoryScreen: () -> Unit,
     navigateUp: (() -> Unit)?,
 ) {
+    val errorMessage = viewModel.errorMessage.collectAsState(null)
     val drivers = viewModel.drivers.collectAsState()
     val route = viewModel.route.collectAsState()
     val uiState = viewModel.uiState.collectAsState()
+
+    if (uiState.value == UiState.NAVIGATE) {
+        navigateToHistoryScreen()
+        viewModel.clearUiState()
+    }
+
+    if (errorMessage.value != null)
+        ErrorAlertDialog(modifier, errorMessage.value.toString()) { viewModel.clearErrorMessage() }
 
     val staticMapUrl = StaticMapsUrl
         .Builder()
@@ -59,8 +70,10 @@ fun RequestCarOptionsScreen(
 
     RequestCarOptionsScreenContent(
         modifier = modifier,
+        uiState = uiState.value,
         drivers = drivers.value,
         staticMapUrl = staticMapUrl,
+        confirm = { driver -> viewModel.confirm(driver) },
         navigateUp = navigateUp,
         navigateToHistoryScreen = navigateToHistoryScreen,
     )
@@ -69,8 +82,10 @@ fun RequestCarOptionsScreen(
 @Composable
 fun RequestCarOptionsScreenContent(
     modifier: Modifier,
+    uiState: UiState,
     staticMapUrl: String,
     drivers: List<Driver>,
+    confirm: (Driver) -> Unit,
     navigateUp: (() -> Unit)?,
     navigateToHistoryScreen: () -> Unit,
 ) = ScaffoldAndSurface(
@@ -84,10 +99,12 @@ fun RequestCarOptionsScreenContent(
                 items(
                     count = drivers.size,
                     itemContent = { index ->
+                        val driver = drivers[index]
                         DriverCard(
                             modifier = modifier,
-                            driver = drivers[index],
-                            choose = navigateToHistoryScreen,
+                            uiState = uiState,
+                            driver = driver,
+                            choose = { confirm(driver) },
                         )
                     },
                 )
@@ -109,6 +126,7 @@ fun RouteMap(modifier: Modifier, imageUrl: String) {
 @Composable
 fun DriverCard(
     modifier: Modifier,
+    uiState: UiState,
     driver: Driver,
     choose: () -> Unit,
 ) = ElevatedCard(
@@ -125,13 +143,11 @@ fun DriverCard(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.space)),
     ) {
         LabelAndInformation(stringResource(R.string.requestcaroptions_name_label), driver.name)
-        driver.vehicle?.let {
-            LabelAndInformation(
-                stringResource(R.string.requestcaroptions_vehicle_label), it
-            )
-        }
-        driver.review?.let { RatingLabelAndInformation(it.rating, it.comment) }
-        if (driver.description?.isEmpty()?.not() == true) {
+        LabelAndInformation(
+            stringResource(R.string.requestcaroptions_vehicle_label), driver.vehicle
+        )
+        RatingLabelAndInformation(driver.review.rating, driver.review.comment)
+        if (driver.description.isEmpty().not()) {
             LabelAndInformation(
                 stringResource(R.string.requestcaroptions_desc_label),
                 driver.description
@@ -142,12 +158,13 @@ fun DriverCard(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            driver.value?.let { ValueLabelAndInformation(it) }
+            ValueLabelAndInformation(driver.value)
             //TODO add on-going request animation
             Button(
                 modifier = modifier.width(dimensionResource(R.dimen.button_width)),
                 onClick = choose,
                 contentPadding = PaddingValues(dimensionResource(R.dimen.zero_dp)),
+                enabled = uiState == UiState.START,
             ) {
                 Text(
                     text = stringResource(R.string.requestcaroptions_choose_button_text),
@@ -213,9 +230,10 @@ fun LabelAndInformationPreview() = LabelAndInformation(
 
 @Composable
 @Preview(showSystemUi = false, showBackground = false)
-fun DriverCardPreview() = DriverCard(Modifier, fakeDrivers[0]) {}
+fun DriverCardPreview() = DriverCard(Modifier, UiState.START, fakeDrivers[0]) {}
 
 @Composable
 @Preview(showSystemUi = true, showBackground = true)
 fun RequestCarOptionsScreenContentPreview() =
-    RequestCarOptionsScreenContent(Modifier, "", fakeDrivers, {}) {}
+    RequestCarOptionsScreenContent(
+        Modifier, UiState.START,"", fakeDrivers, {}, {}) {}

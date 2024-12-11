@@ -23,7 +23,7 @@ interface IApiService {
     @GET("/ride/{userId}?driver_id={driverId}")
     suspend fun getHistory(
         @Path("userId") userId: String,
-        @Path("driverId") driverId: Long
+        @Path("driverId") driverId: Int
     ) : Response<HistoryResult>
 
     companion object {
