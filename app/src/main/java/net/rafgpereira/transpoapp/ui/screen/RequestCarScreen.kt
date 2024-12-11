@@ -29,24 +29,37 @@ import net.rafgpereira.transpoapp.ui.viewmodel.UiState
 @Composable
 fun RequestCarScreen(
     modifier: Modifier,
-    viewModel: RequestCarViewModel?,
+    viewModel: RequestCarViewModel,
     navigateToOptionsScreen: () -> Unit,
 ) {
-    val userId = viewModel?.userId ?: MutableStateFlow("")
-    val origin = viewModel?.origin ?: MutableStateFlow("")
-    val destination = viewModel?.destination ?: MutableStateFlow("")
-    val errorMessage = viewModel?.errorMessage?.collectAsState(null)?.value
-    val uiState = viewModel?.uiState?.collectAsState()?.value ?: UiState.START
+    val userId = viewModel.userId
+    val origin = viewModel.origin
+    val destination = viewModel.destination
+    val errorMessage = viewModel.errorMessage.collectAsState(null).value
+    val uiState = viewModel.uiState.collectAsState().value
 
     if (uiState == UiState.NAVIGATE) {
         navigateToOptionsScreen()
-        viewModel?.clearUiState()
+        viewModel.clearUiState()
     }
 
     if (errorMessage != null && errorMessage.isEmpty().not())
         ErrorAlertDialog(modifier, errorMessage) { viewModel.clearErrorMessage() }
 
-    ScaffoldAndSurface(modifier = modifier) {
+    RequestCarScreenContent(
+        modifier, uiState, userId, origin, destination, { viewModel.estimate() }
+    )
+}
+
+@Composable
+fun RequestCarScreenContent(
+    modifier: Modifier,
+    uiState: UiState,
+    userId: MutableStateFlow<String>,
+    origin: MutableStateFlow<String>,
+    destination: MutableStateFlow<String>,
+    requestEstimate: () -> Unit,
+) = ScaffoldAndSurface(modifier = modifier) {
         Column(
             modifier = modifier
                 .padding(dimensionResource(R.dimen.screen_padding))
@@ -81,7 +94,7 @@ fun RequestCarScreen(
                 onValueChange = { destination.value = it },
                 label = {
                     Text(text =
-                        stringResource(R.string.requestcar_destinationaddress_field_title),
+                    stringResource(R.string.requestcar_destinationaddress_field_title),
                     )
                 },
                 enabled = uiState == UiState.START
@@ -98,7 +111,7 @@ fun RequestCarScreen(
                     )
                     .align(Alignment.CenterHorizontally)
                     .width(dimensionResource(R.dimen.button_width)),
-                onClick = { viewModel?.estimate() },
+                onClick = requestEstimate,
                 enabled = uiState == UiState.START
             ) {
                 if (uiState != UiState.START)
@@ -109,8 +122,9 @@ fun RequestCarScreen(
             }
         }
     }
-}
 
 @Composable
 @Preview(showSystemUi = true, showBackground = true)
-fun RequestCarScreenPreview() = RequestCarScreen(Modifier, null) {}
+fun RequestCarScreenContentPreview() = RequestCarScreenContent(
+    Modifier, UiState.START, MutableStateFlow(""), MutableStateFlow(""),
+    MutableStateFlow("")) {}
