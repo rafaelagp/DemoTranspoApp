@@ -28,7 +28,7 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
 import net.rafgpereira.transpoapp.R
-import net.rafgpereira.transpoapp.domain.model.TempDriver
+import net.rafgpereira.transpoapp.domain.model.Driver
 import net.rafgpereira.transpoapp.domain.model.fakeDrivers
 import net.rafgpereira.transpoapp.ui.common.ScaffoldAndSurface
 
@@ -39,7 +39,7 @@ val fakeOriginLatLng = LatLng(-23.5215624, -46.763286699999995)
 @Composable
 fun RequestCarOptionsScreen(
     modifier: Modifier,
-    drivers: Array<TempDriver>,
+    drivers: Array<Driver>,
     navigateToHistoryScreenAction: () -> Unit, //TODO pass driver thru action?
     navigateUpAction: (() -> Unit)?,
 ) = ScaffoldAndSurface(
@@ -91,7 +91,7 @@ fun RouteMap(originPosition: LatLng) {
 @Composable
 fun DriverCard(
     modifier: Modifier,
-    driver: TempDriver,
+    driver: Driver,
     chooseAction: () -> Unit,
 ) = ElevatedCard(
     modifier = modifier.padding(dimensionResource(R.dimen.space)),
@@ -115,17 +115,18 @@ fun DriverCard(
                 stringResource(R.string.requestcaroptions_vehicle_label), driver.vehicle
             )
             LabelAndInformation(
-                stringResource(R.string.requestcaroptions_rating_label), driver.rating
+                stringResource(R.string.requestcaroptions_rating_label),
+                    driver.review.rating.toString()
             )
         }
-        if (driver.desc.isEmpty().not()) {
-            LabelAndInformation(stringResource(R.string.requestcaroptions_desc_label), driver.desc)
+        if (driver.description.isEmpty().not()) {
+            LabelAndInformation(stringResource(R.string.requestcaroptions_desc_label), driver.description)
         }
         Row(
             modifier = modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            LabelAndInformation(stringResource(R.string.requestcaroptions_cost_label), driver.cost)
+            LabelAndInformation(stringResource(R.string.requestcaroptions_cost_label), driver.value.toString())
             //TODO add on-going request animation
             Button(
                 modifier = modifier.width(dimensionResource(R.dimen.button_width)),

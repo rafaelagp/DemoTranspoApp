@@ -1,16 +1,16 @@
 package net.rafgpereira.transpoapp.domain.model
 
-//TODO replace temporary driver class
-data class TempDriver(
+data class Driver(
+    val id: Long,
     val name: String,
-    val desc: String,
+    val description: String,
     val vehicle: String,
-    val rating: String,
-    val cost: String,
+    val review: DriverReview,
+    val value: Double
 )
 
 val fakeDrivers = arrayOf(
-    TempDriver("João","Sou motorista a 10 anos","Monza","8","$20"),
-    TempDriver("Thiago","","Kwid","10","$25"),
-    TempDriver("Paulo","Vida-loka","Toyota Corolla","5","$21"),
+    Driver(1,"João","Sou motorista a 10 anos","Monza", DriverReview(10, "Meh"), 20.5),
+    Driver(2,"Thiago","","Kwid", DriverReview(7, "Meh"),25.0),
+    Driver(3,"Paulo","Vida-loka","Toyota Corolla",DriverReview(8, "Eew"),21.2),
 )

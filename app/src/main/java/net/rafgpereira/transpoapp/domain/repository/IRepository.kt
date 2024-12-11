@@ -1,12 +1,20 @@
 package net.rafgpereira.transpoapp.domain.repository
 
-import net.rafgpereira.transpoapp.data.model.EstimateResponse
-import retrofit2.Response
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import net.rafgpereira.transpoapp.domain.model.Driver
 
 interface IRepository {
+    val drivers: StateFlow<List<Driver>>
+    val errorMessage: SharedFlow<String?>
+
     suspend fun getEstimate(
        userId: String,
        origin: String,
-       destination: String
-    ) : Response<EstimateResponse>
+       destination: String,
+       onSuccess: () -> Unit,
+       onFailure: () -> Unit,
+    )
+
+    suspend fun clearErrorMessage()
 }

@@ -1,23 +1,14 @@
 package net.rafgpereira.transpoapp.data.model
 
 import com.google.android.gms.maps.model.LatLng
-import net.rafgpereira.transpoapp.domain.model.DriverReview
+import net.rafgpereira.transpoapp.domain.model.Driver
 
 data class EstimateResponse(
     val origin: LatLng,
     val destination: LatLng,
     val duration: Long,
-    val options: List<EstimateResponseDriver>,
+    val options: List<Driver>,
     val routeResponse: EstimateResponseRouteResult
-)
-
-data class EstimateResponseDriver(
-    val id: Long,
-    val name: String,
-    val description: String,
-    val vehicle: String,
-    val review: DriverReview,
-    val value: Double
 )
 
 data class EstimateResponseRouteResult(

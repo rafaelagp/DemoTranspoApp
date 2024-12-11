@@ -23,8 +23,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import net.rafgpereira.transpoapp.R
 import net.rafgpereira.transpoapp.ui.common.ErrorAlertDialog
 import net.rafgpereira.transpoapp.ui.common.ScaffoldAndSurface
+import net.rafgpereira.transpoapp.ui.common.UiState
 import net.rafgpereira.transpoapp.ui.viewmodel.RequestCarViewModel
-import net.rafgpereira.transpoapp.ui.viewmodel.UiState
 
 @Composable
 fun RequestCarScreen(

@@ -33,7 +33,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import net.rafgpereira.transpoapp.R
-import net.rafgpereira.transpoapp.domain.model.TempDriver
+import net.rafgpereira.transpoapp.domain.model.Driver
 import net.rafgpereira.transpoapp.domain.model.fakeDrivers
 import net.rafgpereira.transpoapp.ui.common.ScaffoldAndSurface
 
@@ -42,7 +42,7 @@ import net.rafgpereira.transpoapp.ui.common.ScaffoldAndSurface
 fun HistoryScreen(
     modifier: Modifier,
     navigateUpAction: (() -> Unit)?,
-    drivers: Array<TempDriver>,
+    drivers: Array<Driver>,
 ) = ScaffoldAndSurface(
     modifier = modifier,
     title = stringResource(R.string.history_screen_title),
@@ -73,7 +73,7 @@ fun HistoryScreen(
 @Composable
 fun DriverDropdownAndFilter(
     modifier: Modifier,
-    drivers: Array<TempDriver>,
+    drivers: Array<Driver>,
 ) = Row(
     modifier = modifier.fillMaxWidth(),
     horizontalArrangement = Arrangement.SpaceBetween,
@@ -92,7 +92,7 @@ fun DriverDropdownAndFilter(
 @Composable
 fun DriverDropdownMenu(
     modifier: Modifier,
-    drivers: Array<TempDriver>,
+    drivers: Array<Driver>,
     isDropdownExpanded: Boolean = false,
 ) {
     val dropdownExpandedState = remember { mutableStateOf(isDropdownExpanded) }
