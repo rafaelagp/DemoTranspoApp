@@ -108,7 +108,7 @@ fun RequestCarScreenContent(
                     )
                     .align(Alignment.CenterHorizontally)
                     .width(dimensionResource(R.dimen.button_width)),
-                onClick = requestEstimate,
+                onClick = debounced(requestEstimate),
                 enabled = uiState == UiState.START
             ) {
                 if (uiState != UiState.START)
