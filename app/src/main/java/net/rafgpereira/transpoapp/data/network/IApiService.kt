@@ -11,6 +11,7 @@ import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface IApiService {
 
@@ -20,10 +21,10 @@ interface IApiService {
     @PATCH("/ride/confirm")
     suspend fun confirm(@Body requestBody: ConfirmRequestBody) : Response<ConfirmResult>
 
-    @GET("/ride/{userId}?driver_id={driverId}")
+    @GET("/ride/{userId}")
     suspend fun getHistory(
         @Path("userId") userId: String,
-        @Path("driverId") driverId: Int
+        @Query("driver_id") driverId: Int
     ) : Response<HistoryResult>
 
     companion object {
