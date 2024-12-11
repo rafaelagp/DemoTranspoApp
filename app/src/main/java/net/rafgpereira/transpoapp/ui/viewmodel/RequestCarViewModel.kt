@@ -24,7 +24,7 @@ class RequestCarViewModel @Inject constructor(private val repository: IRepositor
     val origin = MutableStateFlow(originData)//"")
     val destination = MutableStateFlow(destinationData)//"")
 
-    private val _errorMessage = MutableSharedFlow<String>()
+    private val _errorMessage = MutableSharedFlow<String?>()
     val errorMessage = _errorMessage.asSharedFlow()
 
     private val _uiState = MutableStateFlow(UiState.START)
@@ -55,7 +55,7 @@ class RequestCarViewModel @Inject constructor(private val repository: IRepositor
         }
     }
 
-    fun clearErrorMessage() = viewModelScope.launch { _errorMessage.emit("") }
+    fun clearErrorMessage() = viewModelScope.launch { _errorMessage.emit(null) }
 
     fun clearUiState() { _uiState.value = UiState.START }
 }

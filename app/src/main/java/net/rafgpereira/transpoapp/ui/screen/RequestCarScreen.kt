@@ -32,23 +32,20 @@ fun RequestCarScreen(
     viewModel: RequestCarViewModel,
     navigateToOptionsScreen: () -> Unit,
 ) {
-    val userId = viewModel.userId
-    val origin = viewModel.origin
-    val destination = viewModel.destination
-    val errorMessage = viewModel.errorMessage.collectAsState(null).value
-    val uiState = viewModel.uiState.collectAsState().value
+    val errorMessage = viewModel.errorMessage.collectAsState(null)
+    val uiState = viewModel.uiState.collectAsState()
 
-    if (uiState == UiState.NAVIGATE) {
+    if (uiState.value == UiState.NAVIGATE) {
         navigateToOptionsScreen()
         viewModel.clearUiState()
     }
 
-    if (errorMessage != null && errorMessage.isEmpty().not())
-        ErrorAlertDialog(modifier, errorMessage) { viewModel.clearErrorMessage() }
+    if (errorMessage.value != null)
+        ErrorAlertDialog(modifier, errorMessage.value.toString()) { viewModel.clearErrorMessage() }
 
     RequestCarScreenContent(
-        modifier, uiState, userId, origin, destination, { viewModel.estimate() }
-    )
+        modifier, uiState.value, viewModel.userId, viewModel.origin, viewModel.destination
+    ) { viewModel.estimate() }
 }
 
 @Composable
