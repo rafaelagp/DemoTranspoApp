@@ -22,7 +22,7 @@ fun MyNavHost(navController: NavHostController) =
             RequestCarScreen(
                 modifier = Modifier,
                 viewModel = hiltViewModel<RequestCarViewModel>(),
-                navigateToOptionsScreenAction = {
+                navigateToOptionsScreen = {
                     navController.navigate(Route.RequestCarOptionsScreen)
                 },
             )

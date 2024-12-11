@@ -1,6 +1,5 @@
 package net.rafgpereira.transpoapp.ui.screen
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -26,20 +25,19 @@ import net.rafgpereira.transpoapp.ui.common.ErrorAlertDialog
 import net.rafgpereira.transpoapp.ui.common.ScaffoldAndSurface
 import net.rafgpereira.transpoapp.ui.viewmodel.RequestCarViewModel
 
-@SuppressLint("UnrememberedMutableState")
 @Composable
 fun RequestCarScreen(
     modifier: Modifier,
     viewModel: RequestCarViewModel?,
-    navigateToOptionsScreenAction: () -> Unit,
+    navigateToOptionsScreen: () -> Unit,
 ) {
     val userId = viewModel?.userId ?: MutableStateFlow("")
     val origin = viewModel?.origin ?: MutableStateFlow("")
     val destination = viewModel?.destination ?: MutableStateFlow("")
     val errorMessage = viewModel?.errorMessage?.collectAsState(null)?.value
     val isBusy = viewModel?.isBusy ?: MutableStateFlow(false)
-    val shouldNavigateToOptions =
-        viewModel?.shouldNavigateToOptions?.collectAsState(null)?.value
+    val shouldNavigateToOptionsScreen =
+        viewModel?.shouldNavigateToOptionsScreen?.collectAsState(null)?.value
 
     ScaffoldAndSurface(modifier = modifier) {
         Column(
@@ -107,9 +105,9 @@ fun RequestCarScreen(
         if (errorMessage != null && errorMessage.isEmpty().not())
             ErrorAlertDialog(modifier, errorMessage) { viewModel.clearErrorMessage() }
 
-        if (shouldNavigateToOptions != null && shouldNavigateToOptions) {
-            navigateToOptionsScreenAction()
-            viewModel.clearShouldNavigateToOptions()
+        if (shouldNavigateToOptionsScreen != null && shouldNavigateToOptionsScreen) {
+            navigateToOptionsScreen()
+            viewModel.clearShouldNavigateToOptionsScreen()
             viewModel.clearIsBusy()
         }
     }

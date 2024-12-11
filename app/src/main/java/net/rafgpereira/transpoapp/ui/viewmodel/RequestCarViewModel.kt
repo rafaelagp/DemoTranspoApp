@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import net.rafgpereira.transpoapp.data.exception.RequestError
+import net.rafgpereira.transpoapp.data.network.getJsonObject
 import net.rafgpereira.transpoapp.domain.repository.IRepository
 import javax.inject.Inject
 
@@ -29,19 +31,25 @@ class RequestCarViewModel @Inject constructor(private val repository: IRepositor
     val errorMessage = _errorMessage.asSharedFlow()
 
     private val _shouldNavigateToOptions = MutableSharedFlow<Boolean>()
-    val shouldNavigateToOptions = _shouldNavigateToOptions.asSharedFlow()
+    val shouldNavigateToOptionsScreen = _shouldNavigateToOptions.asSharedFlow()
 
     fun estimate() = viewModelScope.launch {
         _isBusy.value = true
         try {
-            repository.getEstimate(
+            val result = repository.getEstimate(
                 userId = userId.value,
                 origin = origin.value,
                 destination = destination.value
             )
-            _shouldNavigateToOptions.emit(true)
+
+            if (result.isSuccessful) _shouldNavigateToOptions.emit(true)
+            else {
+                result.errorBody()?.getJsonObject<RequestError>()?.errorDescription?.let {
+                    _errorMessage.emit(it)
+                }
+                _isBusy.value = false
+            }
         } catch (ex: Exception) {
-            //TODO improve exception handling
             ex.message?.let { _errorMessage.emit(it) }
             _isBusy.value = false
         }
@@ -51,7 +59,7 @@ class RequestCarViewModel @Inject constructor(private val repository: IRepositor
         _errorMessage.emit("")
     }
 
-    fun clearShouldNavigateToOptions() = viewModelScope.launch {
+    fun clearShouldNavigateToOptionsScreen() = viewModelScope.launch {
         _shouldNavigateToOptions.emit(false)
     }
 

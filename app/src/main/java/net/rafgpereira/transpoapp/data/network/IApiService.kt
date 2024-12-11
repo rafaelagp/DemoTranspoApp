@@ -3,6 +3,7 @@ package net.rafgpereira.transpoapp.data.network
 import net.rafgpereira.transpoapp.data.model.ConfirmRequestBody
 import net.rafgpereira.transpoapp.data.model.EstimateRequestBody
 import net.rafgpereira.transpoapp.data.model.EstimateResponse
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.PATCH
@@ -12,7 +13,7 @@ import retrofit2.http.Path
 interface IApiService {
 
     @POST("/ride/estimate")
-    suspend fun getEstimate(@Body requestBody: EstimateRequestBody): EstimateResponse
+    suspend fun getEstimate(@Body requestBody: EstimateRequestBody): Response<EstimateResponse>
 
     @PATCH("/ride/confirm")
     suspend fun confirm(@Body requestBody: ConfirmRequestBody)
