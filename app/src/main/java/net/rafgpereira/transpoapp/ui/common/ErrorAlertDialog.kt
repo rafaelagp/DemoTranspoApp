@@ -14,8 +14,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -28,30 +26,28 @@ import net.rafgpereira.transpoapp.R
 fun ErrorAlertDialog(
     modifier: Modifier,
     errorMessage: String,
-    showAlertState: MutableState<Boolean>,
+    onDismiss: () -> Unit,
 ) {
-    if (showAlertState.value) {
-        BasicAlertDialog(onDismissRequest = { showAlertState.value = false },) {
-            Surface(
-                modifier = modifier
-                    .wrapContentWidth()
-                    .wrapContentHeight(),
-                shape = MaterialTheme.shapes.large,
-            ) {
-                Column(modifier = Modifier.padding(dimensionResource(R.dimen.double_space))) {
-                    Text(
-                        text = stringResource(R.string.error_dialog_title),
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                    Spacer(modifier = Modifier.height(dimensionResource(R.dimen.double_space)))
-                    Text(text = errorMessage, style = MaterialTheme.typography.bodyLarge)
-                    Spacer(modifier = Modifier.height(dimensionResource(R.dimen.double_space)))
-                    TextButton(
-                        onClick = { showAlertState.value = false },
-                        modifier = Modifier.align(Alignment.End)
-                    ) {
-                        Text(stringResource(R.string.error_dialog_button))
-                    }
+    BasicAlertDialog(onDismissRequest = { onDismiss() },) {
+        Surface(
+            modifier = modifier
+                .wrapContentWidth()
+                .wrapContentHeight(),
+            shape = MaterialTheme.shapes.large,
+        ) {
+            Column(modifier = Modifier.padding(dimensionResource(R.dimen.double_space))) {
+                Text(
+                    text = stringResource(R.string.error_dialog_title),
+                    style = MaterialTheme.typography.titleLarge
+                )
+                Spacer(modifier = Modifier.height(dimensionResource(R.dimen.double_space)))
+                Text(text = errorMessage, style = MaterialTheme.typography.bodyLarge)
+                Spacer(modifier = Modifier.height(dimensionResource(R.dimen.double_space)))
+                TextButton(
+                    onClick = { onDismiss() },
+                    modifier = Modifier.align(Alignment.End)
+                ) {
+                    Text(stringResource(R.string.error_dialog_button))
                 }
             }
         }
@@ -62,5 +58,5 @@ fun ErrorAlertDialog(
 @Composable
 @Preview
 fun ErrorAlertDialogPreview() = ErrorAlertDialog(
-    Modifier, stringResource(R.string.error_dialog_preview_message), mutableStateOf(true)
-)
+    Modifier, stringResource(R.string.error_dialog_preview_message),
+) {}

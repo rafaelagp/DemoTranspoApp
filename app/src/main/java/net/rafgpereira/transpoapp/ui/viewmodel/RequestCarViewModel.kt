@@ -12,7 +12,7 @@ import net.rafgpereira.transpoapp.domain.repository.IRepository
 import javax.inject.Inject
 
 @HiltViewModel
-class RequestCarViewModel @Inject constructor(private val repository: IRepository) : ViewModel() {
+class RequestCarViewModel @Inject constructor(private val repository: IRepository,) : ViewModel() {
     //TODO remove data
     private val userIdData = "CT01"
     private val originData = "Av. Pres. Kenedy, 2385 - Remédios, Osasco - SP, 02675-031"
@@ -28,19 +28,28 @@ class RequestCarViewModel @Inject constructor(private val repository: IRepositor
     private val _errorMessage = MutableSharedFlow<String>()
     val errorMessage = _errorMessage.asSharedFlow()
 
+    private val _navigateToOptions = MutableSharedFlow<Boolean>()
+    val shouldNavigateToOptions = _navigateToOptions.asSharedFlow()
+
     fun estimate() = viewModelScope.launch {
+        _isBusy.value = true
         try {
-            _isBusy.value = true
             repository.getEstimate(
                 userId = userId.value,
                 origin = origin.value,
                 destination = destination.value
             )
+            _navigateToOptions.emit(true)
         } catch (ex: Exception) {
             //TODO improve exception handling
             ex.message?.let { _errorMessage.emit(it) }
-        } finally {
             _isBusy.value = false
         }
     }
+
+    fun clearErrorMessage() = viewModelScope.launch {
+        _errorMessage.emit("")
+    }
+
+    fun clearIsBusy() { _isBusy.value = false }
 }

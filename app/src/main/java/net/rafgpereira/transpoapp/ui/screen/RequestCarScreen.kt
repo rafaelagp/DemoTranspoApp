@@ -15,7 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -37,8 +36,10 @@ fun RequestCarScreen(
     val userId = viewModel?.userId ?: MutableStateFlow("")
     val origin = viewModel?.origin ?: MutableStateFlow("")
     val destination = viewModel?.destination ?: MutableStateFlow("")
-    val errorMessage = viewModel?.errorMessage?.collectAsState("")?.value
-    val isBusyState = viewModel?.isBusy ?: MutableStateFlow(false)
+    val errorMessage = viewModel?.errorMessage?.collectAsState(null)?.value
+    val isBusy = viewModel?.isBusy ?: MutableStateFlow(false)
+    val shouldNavigateToOptions =
+        viewModel?.shouldNavigateToOptions?.collectAsState(null)?.value
 
     ScaffoldAndSurface(modifier = modifier) {
         Column(
@@ -58,7 +59,7 @@ fun RequestCarScreen(
                 label = {
                     Text(text = stringResource(R.string.requestcar_userid_field_title),)
                 },
-                enabled = !isBusyState.collectAsState().value,
+                enabled = !isBusy.collectAsState().value,
             )
             TextField(
                 modifier = modifier.fillMaxWidth(),
@@ -67,7 +68,7 @@ fun RequestCarScreen(
                 label = {
                     Text(text = stringResource(R.string.requestcar_originaddress_field_title),)
                 },
-                enabled = !isBusyState.collectAsState().value,
+                enabled = !isBusy.collectAsState().value,
             )
             TextField(
                 modifier = modifier.fillMaxWidth(),
@@ -78,7 +79,7 @@ fun RequestCarScreen(
                         stringResource(R.string.requestcar_destinationaddress_field_title),
                     )
                 },
-                enabled = !isBusyState.collectAsState().value,
+                enabled = !isBusy.collectAsState().value,
             )
             Button(
                 modifier = modifier
@@ -92,13 +93,10 @@ fun RequestCarScreen(
                     )
                     .align(Alignment.CenterHorizontally)
                     .width(dimensionResource(R.dimen.button_width)),
-                onClick = {
-                    viewModel?.estimate()
-                    //navigateToOptionsScreenAction()
-                },
-                enabled = !isBusyState.collectAsState().value,
+                onClick = { viewModel?.estimate() },
+                enabled = !isBusy.collectAsState().value,
             ) {
-                if (isBusyState.collectAsState().value)
+                if (isBusy.collectAsState().value)
                     CircularProgressIndicator(
                         modifier.size(dimensionResource(R.dimen.progress_indicator_size)),
                     )
@@ -106,9 +104,12 @@ fun RequestCarScreen(
             }
         }
 
-        if (errorMessage != null && errorMessage.isEmpty().not()) {
-            val showAlertState = mutableStateOf(true)
-            ErrorAlertDialog(modifier, errorMessage, showAlertState)
+        if (errorMessage != null && errorMessage.isEmpty().not())
+            ErrorAlertDialog(modifier, errorMessage) { viewModel.clearErrorMessage() }
+
+        if (shouldNavigateToOptions != null && shouldNavigateToOptions) {
+            navigateToOptionsScreenAction()
+            viewModel.clearIsBusy()
         }
     }
 }
