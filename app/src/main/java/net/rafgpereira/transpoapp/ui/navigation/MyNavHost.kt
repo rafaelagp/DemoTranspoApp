@@ -16,26 +16,26 @@ import androidx.hilt.navigation.compose.hiltViewModel
 fun MyNavHost(navController: NavHostController) =
     NavHost(
         navController = navController,
-        startDestination = Route.RequestCarScreen
+        startDestination = AppDestination.RequestCarScreen
     ) {
-        composable<Route.RequestCarScreen> {
+        composable<AppDestination.RequestCarScreen> {
             RequestCarScreen(
                 modifier = Modifier,
                 viewModel = hiltViewModel<RequestCarViewModel>(),
                 navigateToOptionsScreen = {
-                    navController.navigate(Route.RequestCarOptionsScreen)
+                    navController.navigate(AppDestination.RequestCarOptionsScreen)
                 },
             )
         }
-        composable<Route.RequestCarOptionsScreen> {
+        composable<AppDestination.RequestCarOptionsScreen> {
             RequestCarOptionsScreen(
                 modifier = Modifier,
                 drivers = fakeDrivers, //TODO remove fake data
-                navigateToHistoryScreenAction = { navController.navigate(Route.HistoryScreen) },
+                navigateToHistoryScreenAction = { navController.navigate(AppDestination.HistoryScreen) },
                 navigateUpAction = { navController.navigateUp() },
             )
         }
-        composable<Route.HistoryScreen> {
+        composable<AppDestination.HistoryScreen> {
             HistoryScreen(
                 modifier = Modifier,
                 navigateUpAction = { navController.navigateUp() },

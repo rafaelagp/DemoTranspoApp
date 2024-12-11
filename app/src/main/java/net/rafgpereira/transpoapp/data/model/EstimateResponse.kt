@@ -1,7 +1,7 @@
 package net.rafgpereira.transpoapp.data.model
 
-import com.google.android.gms.maps.model.LatLng
 import net.rafgpereira.transpoapp.domain.model.Driver
+import net.rafgpereira.transpoapp.domain.model.LatLng
 
 data class EstimateResponse(
     val origin: LatLng,
@@ -24,6 +24,9 @@ data class Leg(
 )
 
 data class Step(
-    val startLocation: LatLng,
-    val endLocation: LatLng
+    val startLocation: StartLocation,
+    val endLocation: EndLocation
 )
+
+data class StartLocation(val latLng: LatLng)
+data class EndLocation(val latLng: LatLng)
