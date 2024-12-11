@@ -9,7 +9,7 @@ sealed class AppDestination {
     data object RequestCarScreen : AppDestination()
 
     @Serializable
-    data object RequestCarOptionsScreen : AppDestination()
+    data object RequestRideOptionsScreen : AppDestination()
 
     @Serializable
     data object HistoryScreen : AppDestination()

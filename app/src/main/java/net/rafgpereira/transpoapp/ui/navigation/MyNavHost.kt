@@ -5,13 +5,13 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import net.rafgpereira.transpoapp.domain.model.fakeDrivers
-import net.rafgpereira.transpoapp.ui.screen.HistoryScreen
-import net.rafgpereira.transpoapp.ui.screen.RequestCarOptionsScreen
-import net.rafgpereira.transpoapp.ui.screen.RequestCarScreen
-import net.rafgpereira.transpoapp.ui.viewmodel.RequestCarViewModel
+import net.rafgpereira.transpoapp.ui.screen.RideHistoryScreen
+import net.rafgpereira.transpoapp.ui.screen.RequestRideOptionsScreen
+import net.rafgpereira.transpoapp.ui.screen.RequestRideScreen
+import net.rafgpereira.transpoapp.ui.viewmodel.RequestRideViewModel
 import androidx.hilt.navigation.compose.hiltViewModel
-import net.rafgpereira.transpoapp.ui.viewmodel.RequestCarOptionsViewModel
+import net.rafgpereira.transpoapp.ui.viewmodel.RequestRideOptionsViewModel
+import net.rafgpereira.transpoapp.ui.viewmodel.RideHistoryViewModel
 
 @Composable
 fun MyNavHost(navController: NavHostController) =
@@ -20,18 +20,18 @@ fun MyNavHost(navController: NavHostController) =
         startDestination = AppDestination.RequestCarScreen
     ) {
         composable<AppDestination.RequestCarScreen> {
-            RequestCarScreen(
+            RequestRideScreen(
                 modifier = Modifier,
-                viewModel = hiltViewModel<RequestCarViewModel>(),
+                viewModel = hiltViewModel<RequestRideViewModel>(),
                 navigateToOptionsScreen = {
-                    navController.navigate(AppDestination.RequestCarOptionsScreen)
+                    navController.navigate(AppDestination.RequestRideOptionsScreen)
                 },
             )
         }
-        composable<AppDestination.RequestCarOptionsScreen> {
-            RequestCarOptionsScreen(
+        composable<AppDestination.RequestRideOptionsScreen> {
+            RequestRideOptionsScreen(
                 modifier = Modifier,
-                viewModel = hiltViewModel<RequestCarOptionsViewModel>(),
+                viewModel = hiltViewModel<RequestRideOptionsViewModel>(),
                 navigateToHistoryScreen = {
                     navController.navigate(AppDestination.HistoryScreen)
                 },
@@ -39,10 +39,10 @@ fun MyNavHost(navController: NavHostController) =
             )
         }
         composable<AppDestination.HistoryScreen> {
-            HistoryScreen(
+            RideHistoryScreen(
                 modifier = Modifier,
+                viewModel = hiltViewModel<RideHistoryViewModel>(),
                 navigateUp = { navController.navigateUp() },
-                drivers = fakeDrivers, //TODO remove fake data
             )
         }
     }

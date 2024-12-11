@@ -23,13 +23,13 @@ import net.rafgpereira.transpoapp.ui.common.TextOrProgressIndicator
 import net.rafgpereira.transpoapp.ui.common.ErrorAlertDialog
 import net.rafgpereira.transpoapp.ui.common.ScaffoldAndSurface
 import net.rafgpereira.transpoapp.ui.common.UiState
-import net.rafgpereira.transpoapp.ui.viewmodel.RequestCarViewModel
+import net.rafgpereira.transpoapp.ui.viewmodel.RequestRideViewModel
 import net.rafgpereira.transpoapp.util.debounced
 
 @Composable
-fun RequestCarScreen(
+fun RequestRideScreen(
     modifier: Modifier,
-    viewModel: RequestCarViewModel,
+    viewModel: RequestRideViewModel,
     navigateToOptionsScreen: () -> Unit,
 ) {
     val errorMessage = viewModel.errorMessage.collectAsState(null)
@@ -45,7 +45,7 @@ fun RequestCarScreen(
 
     RequestCarScreenContent(
         modifier, uiState.value, viewModel.userId, viewModel.origin, viewModel.destination
-    ) { viewModel.estimate() }
+    ) { viewModel.getEstimate() }
 }
 
 @Composable

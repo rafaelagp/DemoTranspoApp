@@ -9,7 +9,7 @@ import net.rafgpereira.transpoapp.ui.common.UiState
 import javax.inject.Inject
 
 @HiltViewModel
-class RequestCarViewModel @Inject constructor(repository: IRepository,)
+class RequestRideViewModel @Inject constructor(repository: IRepository,)
 : BaseViewModel(repository) {
     //TODO remove data
     private val userIdData = "CT01"
@@ -20,7 +20,7 @@ class RequestCarViewModel @Inject constructor(repository: IRepository,)
     val origin = MutableStateFlow(originData)//"")
     val destination = MutableStateFlow(destinationData)//"")
 
-    fun estimate() = viewModelScope.launch {
+    fun getEstimate() = viewModelScope.launch {
         _uiState.value = UiState.LOADING
         repository.getEstimate(
             userId = userId.value,

@@ -37,14 +37,14 @@ import net.rafgpereira.transpoapp.ui.common.ErrorAlertDialog
 import net.rafgpereira.transpoapp.ui.common.ScaffoldAndSurface
 import net.rafgpereira.transpoapp.ui.common.TextOrProgressIndicator
 import net.rafgpereira.transpoapp.ui.common.UiState
-import net.rafgpereira.transpoapp.ui.viewmodel.RequestCarOptionsViewModel
+import net.rafgpereira.transpoapp.ui.viewmodel.RequestRideOptionsViewModel
 import net.rafgpereira.transpoapp.util.debounced
 import java.text.NumberFormat
 
 @Composable
-fun RequestCarOptionsScreen(
+fun RequestRideOptionsScreen(
     modifier: Modifier,
-    viewModel: RequestCarOptionsViewModel,
+    viewModel: RequestRideOptionsViewModel,
     navigateToHistoryScreen: () -> Unit,
     navigateUp: (() -> Unit)?,
 ) {
@@ -68,7 +68,7 @@ fun RequestCarOptionsScreen(
     if (errorMessage.value != null)
         ErrorAlertDialog(modifier, errorMessage.value.toString()) { viewModel.clearErrorMessage() }
 
-    RequestCarOptionsScreenContent(
+    RequestRideOptionsScreenContent(
         modifier = modifier,
         uiState = uiState.value,
         drivers = drivers.value,
@@ -79,7 +79,7 @@ fun RequestCarOptionsScreen(
 }
 
 @Composable
-fun RequestCarOptionsScreenContent(
+fun RequestRideOptionsScreenContent(
     modifier: Modifier,
     uiState: UiState,
     staticMapUrl: String,
@@ -232,6 +232,6 @@ fun DriverCardPreview() = DriverCard(Modifier, UiState.START, fakeDrivers[0]) {}
 
 @Composable
 @Preview(showSystemUi = true, showBackground = true)
-fun RequestCarOptionsScreenContentPreview() =
-    RequestCarOptionsScreenContent(
+fun RequestRideOptionsScreenContentPreview() =
+    RequestRideOptionsScreenContent(
         Modifier, UiState.START,"", fakeDrivers, {}) {}

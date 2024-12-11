@@ -21,35 +21,66 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import kotlinx.coroutines.flow.MutableStateFlow
 import net.rafgpereira.transpoapp.R
 import net.rafgpereira.transpoapp.domain.model.Driver
 import net.rafgpereira.transpoapp.domain.model.fakeDrivers
+import net.rafgpereira.transpoapp.ui.common.ErrorAlertDialog
 import net.rafgpereira.transpoapp.ui.common.ScaffoldAndSurface
+import net.rafgpereira.transpoapp.ui.common.TextOrProgressIndicator
+import net.rafgpereira.transpoapp.ui.common.UiState
+import net.rafgpereira.transpoapp.ui.viewmodel.RideHistoryViewModel
 
-//TODO add nav back arrow function
 @Composable
-fun HistoryScreen(
+fun RideHistoryScreen(
     modifier: Modifier,
+    viewModel: RideHistoryViewModel,
     navigateUp: (() -> Unit)?,
+) {
+    val errorMessage = viewModel.errorMessage.collectAsState(null)
+    val drivers = viewModel.drivers.collectAsState()
+    val uiState = viewModel.uiState.collectAsState()
+    val driverId = viewModel.driverId
+    val userId = viewModel.userId
+
+    if (errorMessage.value != null)
+        ErrorAlertDialog(modifier, errorMessage.value.toString()) { viewModel.clearErrorMessage() }
+
+    RideHistoryScreenContent(
+        modifier = modifier,
+        uiState = uiState.value,
+        driverId = driverId,
+        userId = userId,
+        drivers = drivers.value,
+        getRideHistory = { viewModel.getRideHistory() },
+        navigateUp = navigateUp,
+    )
+}
+
+@Composable
+fun RideHistoryScreenContent(
+    modifier: Modifier,
+    uiState: UiState,
+    driverId: MutableStateFlow<Int>,
+    userId: MutableStateFlow<String>,
     drivers: List<Driver>,
+    getRideHistory: () -> Unit,
+    navigateUp: (() -> Unit)?,
 ) = ScaffoldAndSurface(
     modifier = modifier,
     title = stringResource(R.string.history_screen_title),
     navigateUp = navigateUp,
 ) {
-    var userId by remember { mutableStateOf("") }
-
     Column(
         modifier = modifier
             .padding(dimensionResource(R.dimen.screen_padding))
@@ -62,36 +93,48 @@ fun HistoryScreen(
     ) {
         TextField(
             modifier = modifier.width(dimensionResource(R.dimen.small_textfield_width)),
-            value = userId,
-            onValueChange = { userId = it },
+            value = userId.collectAsState().value,
+            onValueChange = { userId.value = it },
             label = { Text(text = stringResource(R.string.requestcar_userid_field_title),) },
+            enabled = uiState == UiState.START
         )
-        DriverDropdownAndFilter(modifier, drivers)
+        DriverDropdownAndFilter(modifier, uiState, driverId, drivers, getRideHistory)
+        //TODO show ride history here
     }
 }
 
 @Composable
 fun DriverDropdownAndFilter(
     modifier: Modifier,
+    uiState: UiState,
+    driverId: MutableStateFlow<Int>,
     drivers: List<Driver>,
+    getRideHistory: () -> Unit,
 ) = Row(
     modifier = modifier.fillMaxWidth(),
     horizontalArrangement = Arrangement.SpaceBetween,
     verticalAlignment = Alignment.CenterVertically,
 ) {
-    DriverDropdownMenu(modifier, drivers)
-    //TODO disable text fields and button on click and enable when request finishes
-    //TODO add animation while request on-going
+    DriverDropdownMenu(modifier, uiState, driverId, drivers)
     //TODO implement request
     Button(
         modifier = modifier.width(dimensionResource(R.dimen.button_width)),
-        onClick = {},
-    ) { Text(stringResource(R.string.history_filter_button_text),) }
+        onClick = { getRideHistory() },
+        enabled = uiState == UiState.START
+    ) {
+        TextOrProgressIndicator(
+            modifier = modifier,
+            showIndicatorCondition = uiState != UiState.START,
+            text = stringResource(R.string.history_filter_button_text),
+        )
+    }
 }
 
 @Composable
 fun DriverDropdownMenu(
     modifier: Modifier,
+    uiState: UiState,
+    driverId: MutableStateFlow<Int>,
     drivers: List<Driver>,
     isDropdownExpanded: Boolean = false,
 ) {
@@ -109,7 +152,7 @@ fun DriverDropdownMenu(
             TextField(
                 modifier = modifier
                     .width(dimensionResource(R.dimen.small_textfield_width))
-                    .clickable { dropdownExpandedState.value = true },
+                    .clickable { if (uiState == UiState.START) dropdownExpandedState.value = true },
                 value = drivers[itemPosition.intValue].name,
                 onValueChange = {},
                 label = { Text(stringResource(R.string.history_dropdown_label),) },
@@ -142,6 +185,7 @@ fun DriverDropdownMenu(
                         onClick = {
                             dropdownExpandedState.value = false
                             itemPosition.intValue = index
+                            driverId.value = driver.id
                         }
                     )
                 }
@@ -152,8 +196,12 @@ fun DriverDropdownMenu(
 
 @Composable
 @Preview(showSystemUi = false, showBackground = true)
-fun DriverDropdownMenuPreview() = DriverDropdownMenu(Modifier, fakeDrivers, true)
+fun DriverDropdownMenuPreview() = DriverDropdownMenu(
+    Modifier, UiState.START, MutableStateFlow(0), fakeDrivers, true
+)
 
 @Composable
 @Preview(showSystemUi = true, showBackground = true)
-fun HistoryScreenPreview() = HistoryScreen(Modifier, {}, fakeDrivers)
+fun HistoryScreenContentPreview() = RideHistoryScreenContent(
+    Modifier, UiState.START, MutableStateFlow(0), MutableStateFlow(""), fakeDrivers, {}
+) {}
