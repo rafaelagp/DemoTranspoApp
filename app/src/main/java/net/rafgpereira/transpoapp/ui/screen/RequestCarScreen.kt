@@ -6,10 +6,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -21,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.flow.MutableStateFlow
 import net.rafgpereira.transpoapp.R
+import net.rafgpereira.transpoapp.ui.common.TextOrProgressIndicator
 import net.rafgpereira.transpoapp.ui.common.ErrorAlertDialog
 import net.rafgpereira.transpoapp.ui.common.ScaffoldAndSurface
 import net.rafgpereira.transpoapp.ui.common.UiState
@@ -112,11 +111,11 @@ fun RequestCarScreenContent(
                 onClick = debounced(requestEstimate),
                 enabled = uiState == UiState.START
             ) {
-                if (uiState != UiState.START)
-                    CircularProgressIndicator(
-                        modifier.size(dimensionResource(R.dimen.progress_indicator_size)),
-                    )
-                else Text(stringResource(R.string.requestcar_request_button_text),)
+                TextOrProgressIndicator(
+                    modifier = modifier,
+                    showIndicatorCondition = uiState != UiState.START,
+                    text = stringResource(R.string.requestcar_request_button_text),
+                )
             }
         }
     }

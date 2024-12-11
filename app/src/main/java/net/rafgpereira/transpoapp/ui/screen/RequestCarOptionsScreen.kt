@@ -35,11 +35,12 @@ import net.rafgpereira.transpoapp.domain.model.MAX_RATING
 import net.rafgpereira.transpoapp.domain.model.fakeDrivers
 import net.rafgpereira.transpoapp.ui.common.ErrorAlertDialog
 import net.rafgpereira.transpoapp.ui.common.ScaffoldAndSurface
+import net.rafgpereira.transpoapp.ui.common.TextOrProgressIndicator
 import net.rafgpereira.transpoapp.ui.common.UiState
 import net.rafgpereira.transpoapp.ui.viewmodel.RequestCarOptionsViewModel
+import net.rafgpereira.transpoapp.util.debounced
 import java.text.NumberFormat
 
-//TODO disable all buttons on click and enable once request/nav finished
 @Composable
 fun RequestCarOptionsScreen(
     modifier: Modifier,
@@ -51,6 +52,13 @@ fun RequestCarOptionsScreen(
     val drivers = viewModel.drivers.collectAsState()
     val route = viewModel.route.collectAsState()
     val uiState = viewModel.uiState.collectAsState()
+    val staticMapUrl = StaticMapsUrl
+        .Builder()
+        .setMarkers(listOf(route.value.first(), route.value.last()))
+        .setPath(route.value)
+        .setPathColor(MaterialTheme.colorScheme.primary)
+        .build()
+        .value
 
     if (uiState.value == UiState.NAVIGATE) {
         navigateToHistoryScreen()
@@ -60,14 +68,6 @@ fun RequestCarOptionsScreen(
     if (errorMessage.value != null)
         ErrorAlertDialog(modifier, errorMessage.value.toString()) { viewModel.clearErrorMessage() }
 
-    val staticMapUrl = StaticMapsUrl
-        .Builder()
-        .setMarkers(listOf(route.value.first(), route.value.last()))
-        .setPath(route.value)
-        .setPathColor(MaterialTheme.colorScheme.primary)
-        .build()
-        .value
-
     RequestCarOptionsScreenContent(
         modifier = modifier,
         uiState = uiState.value,
@@ -75,7 +75,6 @@ fun RequestCarOptionsScreen(
         staticMapUrl = staticMapUrl,
         confirm = { driver -> viewModel.confirm(driver) },
         navigateUp = navigateUp,
-        navigateToHistoryScreen = navigateToHistoryScreen,
     )
 }
 
@@ -87,7 +86,6 @@ fun RequestCarOptionsScreenContent(
     drivers: List<Driver>,
     confirm: (Driver) -> Unit,
     navigateUp: (() -> Unit)?,
-    navigateToHistoryScreen: () -> Unit,
 ) = ScaffoldAndSurface(
         modifier = modifier,
         title = stringResource(R.string.requestcaroptions_screen_title),
@@ -159,16 +157,16 @@ fun DriverCard(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             ValueLabelAndInformation(driver.value)
-            //TODO add on-going request animation
             Button(
                 modifier = modifier.width(dimensionResource(R.dimen.button_width)),
-                onClick = choose,
+                onClick = debounced(choose),
                 contentPadding = PaddingValues(dimensionResource(R.dimen.zero_dp)),
                 enabled = uiState == UiState.START,
             ) {
-                Text(
+                TextOrProgressIndicator(
+                    modifier = modifier,
+                    showIndicatorCondition = uiState != UiState.START,
                     text = stringResource(R.string.requestcaroptions_choose_button_text),
-                    maxLines = 1,
                 )
             }
         }
@@ -236,4 +234,4 @@ fun DriverCardPreview() = DriverCard(Modifier, UiState.START, fakeDrivers[0]) {}
 @Preview(showSystemUi = true, showBackground = true)
 fun RequestCarOptionsScreenContentPreview() =
     RequestCarOptionsScreenContent(
-        Modifier, UiState.START,"", fakeDrivers, {}, {}) {}
+        Modifier, UiState.START,"", fakeDrivers, {}) {}
