@@ -18,5 +18,18 @@ interface IRepository {
        onFailure: () -> Unit,
     )
 
+    suspend fun confirm(
+        userId: String,
+        origin: String,
+        destination: String,
+        distance: Long,
+        duration: String,
+        driverId: Long,
+        driverName: String,
+        value: Double,
+        onSuccess: () -> Unit,
+        onFailure: () -> Unit,
+    )
+
     suspend fun clearErrorMessage()
 }

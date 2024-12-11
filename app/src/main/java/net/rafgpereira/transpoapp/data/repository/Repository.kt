@@ -5,12 +5,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import net.rafgpereira.transpoapp.data.exception.RequestError
+import net.rafgpereira.transpoapp.data.model.ConfirmRequestBody
+import net.rafgpereira.transpoapp.data.model.ConfirmRequestDriver
 import net.rafgpereira.transpoapp.data.model.EstimateRequestBody
 import net.rafgpereira.transpoapp.data.network.IApiService
 import net.rafgpereira.transpoapp.data.network.getJsonObject
 import net.rafgpereira.transpoapp.domain.model.Driver
 import net.rafgpereira.transpoapp.domain.model.RouteStep
 import net.rafgpereira.transpoapp.domain.repository.IRepository
+import retrofit2.Response
 import javax.inject.Inject
 
 class Repository @Inject constructor(
@@ -48,18 +51,51 @@ class Repository @Inject constructor(
                     }
                     _route.emit(steps)
                     onSuccess()
-                } else {
-                    result.errorBody()?.getJsonObject<RequestError>()?.errorDescription?.let {
-                        _errorMessage.emit(it)
-                    }
-                    onFailure()
-                }
+                } else handleFailedRequest(result, onFailure)
             }
         } catch (ex: Exception) {
-            _errorMessage.emit(ex.localizedMessage)
-            onFailure()
+            handleException(ex, onFailure)
+        }
+    }
+
+    override suspend fun confirm(
+        userId: String,
+        origin: String,
+        destination: String,
+        distance: Long,
+        duration: String,
+        driverId: Long,
+        driverName: String,
+        value: Double,
+        onSuccess: () -> Unit,
+        onFailure: () -> Unit,
+    ) {
+        try {
+            apiService.confirm(
+                ConfirmRequestBody(
+                    userId, origin, destination, distance, duration,
+                        ConfirmRequestDriver(driverId, driverName), value
+                )
+            ).let { result ->
+                if (result.isSuccessful) onSuccess()
+                else handleFailedRequest(result, onFailure)
+            }
+        } catch (ex: Exception) {
+            handleException(ex, onFailure)
         }
     }
 
     override suspend fun clearErrorMessage() { _errorMessage.emit(null) }
+
+    private suspend fun <T> handleFailedRequest(result: Response<T>, onFailure: () -> Unit) {
+        result.errorBody()?.getJsonObject<RequestError>()?.errorDescription?.let {
+            _errorMessage.emit(it)
+        }
+        onFailure()
+    }
+
+    private suspend fun handleException(ex: Exception, onFailure: () -> Unit) {
+        _errorMessage.emit(ex.localizedMessage)
+        onFailure()
+    }
 }
