@@ -24,17 +24,15 @@ class RequestCarViewModel @Inject constructor(private val repository: IRepositor
     val origin = MutableStateFlow(originData)//"")
     val destination = MutableStateFlow(destinationData)//"")
 
-    private val _isBusy = MutableStateFlow(false)
-    val isBusy = _isBusy.asStateFlow()
-
     private val _errorMessage = MutableSharedFlow<String>()
     val errorMessage = _errorMessage.asSharedFlow()
 
-    private val _shouldNavigateToOptions = MutableSharedFlow<Boolean>()
-    val shouldNavigateToOptionsScreen = _shouldNavigateToOptions.asSharedFlow()
+    private val _uiState = MutableStateFlow(UiState.START)
+    val uiState = _uiState.asStateFlow()
 
     fun estimate() = viewModelScope.launch {
-        _isBusy.value = true
+        _uiState.value = UiState.LOADING
+
         try {
             val result = repository.getEstimate(
                 userId = userId.value,
@@ -42,26 +40,28 @@ class RequestCarViewModel @Inject constructor(private val repository: IRepositor
                 destination = destination.value
             )
 
-            if (result.isSuccessful) _shouldNavigateToOptions.emit(true)
+            if (result.isSuccessful) {
+                _uiState.value = UiState.NAVIGATE
+            }
             else {
                 result.errorBody()?.getJsonObject<RequestError>()?.errorDescription?.let {
                     _errorMessage.emit(it)
                 }
-                _isBusy.value = false
+                _uiState.value = UiState.START
             }
         } catch (ex: Exception) {
             ex.message?.let { _errorMessage.emit(it) }
-            _isBusy.value = false
+            _uiState.value = UiState.START
         }
     }
 
-    fun clearErrorMessage() = viewModelScope.launch {
-        _errorMessage.emit("")
-    }
+    fun clearErrorMessage() = viewModelScope.launch { _errorMessage.emit("") }
 
-    fun clearShouldNavigateToOptionsScreen() = viewModelScope.launch {
-        _shouldNavigateToOptions.emit(false)
-    }
+    fun clearUiState() { _uiState.value = UiState.START }
+}
 
-    fun clearIsBusy() { _isBusy.value = false }
+enum class UiState {
+    START,
+    LOADING,
+    NAVIGATE
 }

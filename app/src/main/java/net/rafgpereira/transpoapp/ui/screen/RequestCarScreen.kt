@@ -24,6 +24,7 @@ import net.rafgpereira.transpoapp.R
 import net.rafgpereira.transpoapp.ui.common.ErrorAlertDialog
 import net.rafgpereira.transpoapp.ui.common.ScaffoldAndSurface
 import net.rafgpereira.transpoapp.ui.viewmodel.RequestCarViewModel
+import net.rafgpereira.transpoapp.ui.viewmodel.UiState
 
 @Composable
 fun RequestCarScreen(
@@ -35,9 +36,15 @@ fun RequestCarScreen(
     val origin = viewModel?.origin ?: MutableStateFlow("")
     val destination = viewModel?.destination ?: MutableStateFlow("")
     val errorMessage = viewModel?.errorMessage?.collectAsState(null)?.value
-    val isBusy = viewModel?.isBusy ?: MutableStateFlow(false)
-    val shouldNavigateToOptionsScreen =
-        viewModel?.shouldNavigateToOptionsScreen?.collectAsState(null)?.value
+    val uiState = viewModel?.uiState?.collectAsState()?.value ?: UiState.START
+
+    if (uiState == UiState.NAVIGATE) {
+        navigateToOptionsScreen()
+        viewModel?.clearUiState()
+    }
+
+    if (errorMessage != null && errorMessage.isEmpty().not())
+        ErrorAlertDialog(modifier, errorMessage) { viewModel.clearErrorMessage() }
 
     ScaffoldAndSurface(modifier = modifier) {
         Column(
@@ -57,7 +64,7 @@ fun RequestCarScreen(
                 label = {
                     Text(text = stringResource(R.string.requestcar_userid_field_title),)
                 },
-                enabled = !isBusy.collectAsState().value,
+                enabled = uiState == UiState.START
             )
             TextField(
                 modifier = modifier.fillMaxWidth(),
@@ -66,7 +73,7 @@ fun RequestCarScreen(
                 label = {
                     Text(text = stringResource(R.string.requestcar_originaddress_field_title),)
                 },
-                enabled = !isBusy.collectAsState().value,
+                enabled = uiState == UiState.START
             )
             TextField(
                 modifier = modifier.fillMaxWidth(),
@@ -77,7 +84,7 @@ fun RequestCarScreen(
                         stringResource(R.string.requestcar_destinationaddress_field_title),
                     )
                 },
-                enabled = !isBusy.collectAsState().value,
+                enabled = uiState == UiState.START
             )
             Button(
                 modifier = modifier
@@ -92,23 +99,14 @@ fun RequestCarScreen(
                     .align(Alignment.CenterHorizontally)
                     .width(dimensionResource(R.dimen.button_width)),
                 onClick = { viewModel?.estimate() },
-                enabled = !isBusy.collectAsState().value,
+                enabled = uiState == UiState.START
             ) {
-                if (isBusy.collectAsState().value)
+                if (uiState != UiState.START)
                     CircularProgressIndicator(
                         modifier.size(dimensionResource(R.dimen.progress_indicator_size)),
                     )
                 else Text(stringResource(R.string.requestcar_request_button_text),)
             }
-        }
-
-        if (errorMessage != null && errorMessage.isEmpty().not())
-            ErrorAlertDialog(modifier, errorMessage) { viewModel.clearErrorMessage() }
-
-        if (shouldNavigateToOptionsScreen != null && shouldNavigateToOptionsScreen) {
-            navigateToOptionsScreen()
-            viewModel.clearShouldNavigateToOptionsScreen()
-            viewModel.clearIsBusy()
         }
     }
 }
