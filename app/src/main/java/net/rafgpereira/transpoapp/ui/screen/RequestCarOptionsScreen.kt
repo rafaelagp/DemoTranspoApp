@@ -42,8 +42,8 @@ import java.text.NumberFormat
 fun RequestCarOptionsScreen(
     modifier: Modifier,
     viewModel: RequestCarOptionsViewModel,
-    navigateToHistoryScreenAction: () -> Unit,
-    navigateUpAction: (() -> Unit)?,
+    navigateToHistoryScreen: () -> Unit,
+    navigateUp: (() -> Unit)?,
 ) {
     val drivers = viewModel.drivers.collectAsState()
     val route = viewModel.route.collectAsState()
@@ -61,8 +61,8 @@ fun RequestCarOptionsScreen(
         modifier = modifier,
         drivers = drivers.value,
         staticMapUrl = staticMapUrl,
-        navigateUpAction = navigateUpAction,
-        navigateToHistoryScreenAction = navigateToHistoryScreenAction,
+        navigateUp = navigateUp,
+        navigateToHistoryScreen = navigateToHistoryScreen,
     )
 }
 
@@ -71,12 +71,12 @@ fun RequestCarOptionsScreenContent(
     modifier: Modifier,
     staticMapUrl: String,
     drivers: List<Driver>,
-    navigateUpAction: (() -> Unit)?,
-    navigateToHistoryScreenAction: () -> Unit,
+    navigateUp: (() -> Unit)?,
+    navigateToHistoryScreen: () -> Unit,
 ) = ScaffoldAndSurface(
         modifier = modifier,
         title = stringResource(R.string.requestcaroptions_screen_title),
-        navigateUpAction = navigateUpAction,
+        navigateUp = navigateUp,
     ) {
         Column {
             RouteMap(modifier, staticMapUrl)
@@ -87,7 +87,7 @@ fun RequestCarOptionsScreenContent(
                         DriverCard(
                             modifier = modifier,
                             driver = drivers[index],
-                            chooseAction = navigateToHistoryScreenAction,
+                            choose = navigateToHistoryScreen,
                         )
                     },
                 )
@@ -110,7 +110,7 @@ fun RouteMap(modifier: Modifier, imageUrl: String) {
 fun DriverCard(
     modifier: Modifier,
     driver: Driver,
-    chooseAction: () -> Unit,
+    choose: () -> Unit,
 ) = ElevatedCard(
     modifier = modifier.padding(dimensionResource(R.dimen.space)),
     colors = CardColors(
@@ -146,7 +146,7 @@ fun DriverCard(
             //TODO add on-going request animation
             Button(
                 modifier = modifier.width(dimensionResource(R.dimen.button_width)),
-                onClick = chooseAction,
+                onClick = choose,
                 contentPadding = PaddingValues(dimensionResource(R.dimen.zero_dp)),
             ) {
                 Text(

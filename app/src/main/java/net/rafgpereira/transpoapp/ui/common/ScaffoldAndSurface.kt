@@ -13,7 +13,7 @@ import net.rafgpereira.transpoapp.R
 fun ScaffoldAndSurface(
     modifier: Modifier,
     title: String? = null,
-    navigateUpAction: (() -> Unit)? = null,
+    navigateUp: (() -> Unit)? = null,
     content: @Composable () -> Unit,
 ) {
     val appName = stringResource(R.string.app_name)
@@ -25,7 +25,7 @@ fun ScaffoldAndSurface(
             ThemedTopAppBar(
                 modifier = modifier,
                 title = screenTitle,
-                navigateUpAction = navigateUpAction
+                navigateUp = navigateUp
             )
         },
     ) { innerPadding ->

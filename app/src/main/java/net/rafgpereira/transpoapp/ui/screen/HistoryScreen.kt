@@ -41,12 +41,12 @@ import net.rafgpereira.transpoapp.ui.common.ScaffoldAndSurface
 @Composable
 fun HistoryScreen(
     modifier: Modifier,
-    navigateUpAction: (() -> Unit)?,
+    navigateUp: (() -> Unit)?,
     drivers: List<Driver>,
 ) = ScaffoldAndSurface(
     modifier = modifier,
     title = stringResource(R.string.history_screen_title),
-    navigateUpAction = navigateUpAction,
+    navigateUp = navigateUp,
 ) {
     var userId by remember { mutableStateOf("") }
 

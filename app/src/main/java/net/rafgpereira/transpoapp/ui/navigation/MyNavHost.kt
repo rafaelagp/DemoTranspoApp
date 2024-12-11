@@ -32,16 +32,16 @@ fun MyNavHost(navController: NavHostController) =
             RequestCarOptionsScreen(
                 modifier = Modifier,
                 viewModel = hiltViewModel<RequestCarOptionsViewModel>(),
-                navigateToHistoryScreenAction = {
+                navigateToHistoryScreen = {
                     navController.navigate(AppDestination.HistoryScreen)
                 },
-                navigateUpAction = { navController.navigateUp() },
+                navigateUp = { navController.navigateUp() },
             )
         }
         composable<AppDestination.HistoryScreen> {
             HistoryScreen(
                 modifier = Modifier,
-                navigateUpAction = { navController.navigateUp() },
+                navigateUp = { navController.navigateUp() },
                 drivers = fakeDrivers, //TODO remove fake data
             )
         }
