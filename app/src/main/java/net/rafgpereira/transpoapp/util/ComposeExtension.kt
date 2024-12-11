@@ -1,4 +1,4 @@
-package net.rafgpereira.transpoapp.ui.screen
+package net.rafgpereira.transpoapp.util
 
 import android.os.SystemClock
 import androidx.compose.foundation.clickable

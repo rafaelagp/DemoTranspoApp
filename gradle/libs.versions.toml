@@ -14,9 +14,9 @@ roomVersion = "2.6.1"
 daggerHilt = "2.51.1"
 ksp = "2.0.21-1.0.27"
 secretsGradlePlugin = "2.0.1"
-maps-compose = "4.3.3"
 retrofit = "2.9.0"
 hiltNavigationCompose = "1.2.0"
+coilCompose = "3.0.4"
 
 [libraries]
 ## Core
@@ -36,7 +36,6 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
-maps-compose = { group = "com.google.maps.android", name = "maps-compose", version.ref = "maps-compose" }
 ## Type Safe Compose Navigation
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 ## Room
@@ -51,6 +50,9 @@ retrofit-converter-gson = { group = "com.squareup.retrofit2", name = "converter-
 ## Navigation
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+## Coil
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coilCompose" }
+coil-network-okhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coilCompose" }
 
 [plugins]
 ## Core

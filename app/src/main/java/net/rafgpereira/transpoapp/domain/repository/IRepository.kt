@@ -3,14 +3,14 @@ package net.rafgpereira.transpoapp.domain.repository
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import net.rafgpereira.transpoapp.domain.model.Driver
+import net.rafgpereira.transpoapp.domain.model.LatLng
 import net.rafgpereira.transpoapp.domain.model.Ride
-import net.rafgpereira.transpoapp.domain.model.RouteStep
 
 interface IRepository {
     val errorMessage: SharedFlow<String?>
     val drivers: StateFlow<List<Driver>>
     val rides: StateFlow<List<Ride>>
-    val route: StateFlow<List<RouteStep>>
+    val route: StateFlow<List<LatLng>>
 
     suspend fun getEstimate(
        userId: String,

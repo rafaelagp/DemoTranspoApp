@@ -9,7 +9,7 @@ data class Driver(
     val value: Double?
 )
 
-val fakeDrivers = arrayOf(
+val fakeDrivers = listOf(
     Driver(1,
         "Homer Simpson",
         "Olá! Sou o Homer, seu motorista camarada! Relaxe e aproveite o passeio, com direito a rosquinhas e boas risadas (e talvez alguns desvios).",

@@ -1,4 +1,4 @@
-package net.rafgpereira.transpoapp.data.network
+package net.rafgpereira.transpoapp.util
 
 import com.google.gson.Gson
 import okhttp3.ResponseBody

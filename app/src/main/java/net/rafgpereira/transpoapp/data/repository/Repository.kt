@@ -9,10 +9,10 @@ import net.rafgpereira.transpoapp.data.model.ConfirmRequestBody
 import net.rafgpereira.transpoapp.data.model.ConfirmRequestDriver
 import net.rafgpereira.transpoapp.data.model.EstimateRequestBody
 import net.rafgpereira.transpoapp.data.network.IApiService
-import net.rafgpereira.transpoapp.data.network.getJsonObject
+import net.rafgpereira.transpoapp.util.getJsonObject
 import net.rafgpereira.transpoapp.domain.model.Driver
+import net.rafgpereira.transpoapp.domain.model.LatLng
 import net.rafgpereira.transpoapp.domain.model.Ride
-import net.rafgpereira.transpoapp.domain.model.RouteStep
 import net.rafgpereira.transpoapp.domain.repository.IRepository
 import retrofit2.Response
 import javax.inject.Inject
@@ -26,7 +26,7 @@ class Repository @Inject constructor(
     private val _rides = MutableStateFlow<List<Ride>>(listOf())
     override val rides = _rides.asStateFlow()
 
-    private val _route = MutableStateFlow<List<RouteStep>>(listOf())
+    private val _route = MutableStateFlow<List<LatLng>>(listOf())
     override val route = _route.asStateFlow()
 
     private val _errorMessage = MutableSharedFlow<String?>()
@@ -43,13 +43,12 @@ class Repository @Inject constructor(
             apiService.getEstimate(EstimateRequestBody(userId, origin, destination)).let { result ->
                 if (result.isSuccessful) {
                     result.body()?.options?.let { _drivers.emit(it) }
-                    val steps = mutableListOf<RouteStep>()
+                    val steps = mutableListOf<LatLng>()
                     result.body()?.routeResponse?.routes?.forEach { route ->
                         route.legs.forEach { leg ->
                             leg.steps.forEach { step ->
-                                steps.add(
-                                    RouteStep(step.startLocation.latLng, step.endLocation.latLng)
-                                )
+                                steps.add(step.startLocation.latLng)
+                                steps.add(step.endLocation.latLng)
                             }
                         }
                     }

@@ -1,12 +1,13 @@
 package net.rafgpereira.transpoapp.ui.screen
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
@@ -15,6 +16,7 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
@@ -22,34 +24,57 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.MapUiSettings
-import com.google.maps.android.compose.rememberCameraPositionState
-import net.rafgpereira.transpoapp.BuildConfig
+import coil3.compose.AsyncImage
 import net.rafgpereira.transpoapp.R
+import net.rafgpereira.transpoapp.util.StaticMapsUrl
 import net.rafgpereira.transpoapp.domain.model.Driver
 import net.rafgpereira.transpoapp.domain.model.fakeDrivers
 import net.rafgpereira.transpoapp.ui.common.ScaffoldAndSurface
-
-val fakeOriginLatLng = LatLng(-23.5215624, -46.763286699999995)
+import net.rafgpereira.transpoapp.ui.viewmodel.RequestCarOptionsViewModel
 
 //TODO disable all buttons on click and enable once request/nav finished
-//TODO add navigate back arrow
 @Composable
 fun RequestCarOptionsScreen(
     modifier: Modifier,
-    drivers: Array<Driver>,
-    navigateToHistoryScreenAction: () -> Unit, //TODO pass driver thru action?
+    viewModel: RequestCarOptionsViewModel,
+    navigateToHistoryScreenAction: () -> Unit,
     navigateUpAction: (() -> Unit)?,
+) {
+    val drivers = viewModel.drivers.collectAsState()
+    val route = viewModel.route.collectAsState()
+    val uiState = viewModel.uiState.collectAsState()
+
+    val staticMapUrl = StaticMapsUrl
+        .Builder()
+        .setMarkers(listOf(route.value.first(), route.value.last()))
+        .setPath(route.value)
+        .setPathColor(MaterialTheme.colorScheme.primary)
+        .build()
+        .value
+
+    RequestCarOptionsScreenContent(
+        modifier = modifier,
+        drivers = drivers.value,
+        staticMapUrl = staticMapUrl,
+        navigateUpAction = navigateUpAction,
+        navigateToHistoryScreenAction = navigateToHistoryScreenAction,
+    )
+}
+
+@Composable
+fun RequestCarOptionsScreenContent(
+    modifier: Modifier,
+    staticMapUrl: String,
+    drivers: List<Driver>,
+    navigateUpAction: (() -> Unit)?,
+    navigateToHistoryScreenAction: () -> Unit,
 ) = ScaffoldAndSurface(
         modifier = modifier,
         title = stringResource(R.string.requestcaroptions_screen_title),
         navigateUpAction = navigateUpAction,
     ) {
         Column {
-            RouteMap(fakeOriginLatLng)
+            RouteMap(modifier, staticMapUrl)
             LazyColumn(contentPadding = PaddingValues(dimensionResource(R.dimen.space))) {
                 items(
                     count = drivers.size,
@@ -65,31 +90,13 @@ fun RequestCarOptionsScreen(
         }
     }
 
-val encodedPolyline = "v`qnCpml|Ga@~Am@rB]lAYpA]|AS`AQz@YfAUz@Ox@G^Gz@ATMlAKx@I`@EVGZC\\\\AF?H?J@LBLBPH\\\\FTFR@LBJ@^?b@@|@@pA?bA?F@N@FBDDHVVVDB?D@VDVHB?XJPHPHHFHH@@LRJXDR@FF\\\\Fr@FVT|BR`CDd@JlAVpBHt@LfALtAH`AH|@JpADdA@b@Aj@?JEzAC`AI|AC^Cf@CVGx@E`@]vCaAKcAMXoCXqCBa@Dm@@c@Bg@?E?k@A}@ASEw@OsAWiACUIi@My@AM?K?K?KBSDODQFQ@I@E@[JOV]d@k@`@e@Z[X[V]JMLO^m@Ni@Je@Fa@B_@@M@K?]Ae@Ei@CUCMEWIe@Ia@o@_EKk@Ge@Kq@SmAW{BGm@Ci@Cu@?[?Q@e@?a@NsBHsAJo@TgAZyAViAXsA\\\\wAVaAV}@rAmFTkADSh@wCF[Jg@DW@I?E?EAEXoARy@p@}CDSn@qC\\\\eB|@uDl@kCHe@Pu@|@yD\\\\oAT{@f@sBb@kBh@sBHa@BIJg@n@aCLe@Nm@H]DOBIFQHWFOFOJSLSNQBETUPOPMHGNIVMRILENEJALCLCLAHANAT?B?LAR?d@@@?`@@J?|@Bt@@r@B^AlC@H?`@A^APCXANCZCPEVEPCHCHCTINERIDCHE~@g@v@g@ROVU`@]d@g@JIZ[JKJKDCDCFAFA`@e@bAmAt@y@RSrCeDn@u@j@q@b@g@hCyChEcFrI{J|@eAn@u@j@o@^c@`EyEvGyHlDcEZ_@\\\\c@b@m@RWdA{ALSpAkBl@w@n@w@DGPS@ANQ@C`@a@f@i@`AaAn@k@VU`B}A|@}@`@c@RWRU`@k@bAuAv@oAHMz@wABCLMXk@rEgLfCwGrKsX|EgMNa@vCwHdIySL]nBeFt@kBNa@j@yANYnBmFjAaD`AeCRc@Ri@z@wBTq@Tm@Zs@LUf@aAZi@^k@Ze@d@k@V[`@c@h@k@b@a@d@a@XUj@a@XQd@[f@Yr@_@|@_@FCf@S\\\\KZKf@Oj@QfCq@fFsAbCo@rGcBfEoA@C`@ODCJEh@WjC_BLGhAu@b@c@j@i@^_@b@a@b@a@LK\\\\Yb@[z@k@JG^WTOPQdA_ARUHIBADAXCxBaCTWPWLM|@aAt@w@^a@h@g@p@k@p@i@z@m@`Am@vAs@vAs@bF_C|BgADCzBcAfCmAfCmA|E_CDA^Or@[`@Ov@_@hB}@n@[f@KPGv@YjBo@XKTE\\\\GPCf@Cl@Ap@@vABlAJXDV\\\\@@BDDH@D@B?D?D?@AJADCFCBE@EBC@G@WBs@CS?IAMCUMGGAAACCG?S?GAIAIEK?M?MCmCAa@?C?G?]EyCAQ?SCUAOMm@EIOQm@o@SUc@e@a@a@OOi@]YYIGwA{Ai@m@CG[[SSOCA?AAECQQm@q@CCg@k@c@g@eAkASSEEMMKM[YY[gBiBs@u@Y[s@u@GKGIQQSQ]a@q@w@{@}@KQIMCIAAESCO?GCM?o@?EDkB?]Ag@@I?OHe@@C@CHKB_B?S@uA@c@@c@?I@Y?S?WAYAQA]C]E]E[ESESCMCICQEOAIKWISEKSSkA_C]m@sAmCwBcEGOqAgCyAsCKMc@{@ISGMIUGUCMAGAGAC?C?A@A@AAGCWCMCQ?Y?Q@s@?YA[AGGe@AG?EG_@G]CMOg@m@_A]g@ACMSy@oAu@kAc@s@qAqBk@}@a@o@iAeBeA_BMQKOOUIOcAaBc@o@kAgBa@m@U]m@{@ACQYIMMQs@iAkAiBq@aAIQOYW_@a@m@GIQWMOKQMQQQk@k@[Yg@g@[YUSsEkEUUOOu@u@A?o@m@WWOOMKIKSQw@u@][UWUUu@s@_@_@WWk@i@c@a@a@]MMGGIIGGAG?CCGMUACCCEEKIOIOKIEa@QYKKCUIEAICIEGC[^MPSVUZCDOP[b@QTu@y@UWKKAAm@o@e@e@o@q@CCo@q@k@o@ECSUGGKKm@t@CDIHUXCD"
-val mapsApiKey = BuildConfig.MAPS_API_KEY
-val staticMapUrl = "https://maps.googleapis.com/maps/api/staticmapsize=400x400&center=59.900503,-135.478011&zoom=4&path=weight:3%7Ccolor:orange%7Cenc:${encodedPolyline}&key=${mapsApiKey}"
-
-//TODO replace with image loading static map url
 @Composable
-fun RouteMap(originPosition: LatLng) {
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(originPosition, 15f)
-    }
-    GoogleMap(
-        modifier = Modifier.height(300.dp),
-        cameraPositionState = cameraPositionState,
-        uiSettings = MapUiSettings(
-            compassEnabled = false,
-            indoorLevelPickerEnabled = false,
-            mapToolbarEnabled = false,
-            myLocationButtonEnabled = false,
-            rotationGesturesEnabled = false,
-            scrollGesturesEnabled = false,
-            scrollGesturesEnabledDuringRotateOrZoom = false,
-            tiltGesturesEnabled = false,
-            zoomControlsEnabled = false,
-            zoomGesturesEnabled = false
-        ),
+fun RouteMap(modifier: Modifier, imageUrl: String) {
+    Log.i("Static Maps Url", "RouteMap: $imageUrl")
+    AsyncImage(
+        modifier = modifier.size(400.dp),
+        model = imageUrl,
+        contentDescription = "Mapa estático da rota"
     )
 }
 
@@ -173,5 +180,5 @@ fun DriverCardPreview() = DriverCard(Modifier, fakeDrivers[0]) {}
 
 @Composable
 @Preview(showSystemUi = true, showBackground = true)
-fun RequestCarOptionsScreenPreview() = RequestCarOptionsScreen(
-    Modifier, fakeDrivers, {}) {}
+fun RequestCarOptionsScreenContentPreview() =
+    RequestCarOptionsScreenContent(Modifier, "", fakeDrivers, {}) {}

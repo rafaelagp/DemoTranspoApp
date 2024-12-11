@@ -42,7 +42,7 @@ import net.rafgpereira.transpoapp.ui.common.ScaffoldAndSurface
 fun HistoryScreen(
     modifier: Modifier,
     navigateUpAction: (() -> Unit)?,
-    drivers: Array<Driver>,
+    drivers: List<Driver>,
 ) = ScaffoldAndSurface(
     modifier = modifier,
     title = stringResource(R.string.history_screen_title),
@@ -73,7 +73,7 @@ fun HistoryScreen(
 @Composable
 fun DriverDropdownAndFilter(
     modifier: Modifier,
-    drivers: Array<Driver>,
+    drivers: List<Driver>,
 ) = Row(
     modifier = modifier.fillMaxWidth(),
     horizontalArrangement = Arrangement.SpaceBetween,
@@ -92,7 +92,7 @@ fun DriverDropdownAndFilter(
 @Composable
 fun DriverDropdownMenu(
     modifier: Modifier,
-    drivers: Array<Driver>,
+    drivers: List<Driver>,
     isDropdownExpanded: Boolean = false,
 ) {
     val dropdownExpandedState = remember { mutableStateOf(isDropdownExpanded) }
