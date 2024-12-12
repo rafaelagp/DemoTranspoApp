@@ -23,15 +23,14 @@ class StaticMapsUrl private constructor(val value: String) {
         private var pathColor: String? = null
         private var path: String? = null
 
-        fun setMarkers(locations: List<LatLng>) : Builder {
+        fun setMarkers(origin: LatLng, destination: LatLng) : Builder {
             val markerQuery = "&markers="
-            var markers = ""
+            val originMarker = "${markerQuery}label:O${DELIMITER}" +
+                    "${origin.latitude},${origin.longitude}"
+            val destinationMarker = "${markerQuery}label:D${DELIMITER}" +
+                    "${destination.latitude},${destination.longitude}"
 
-            locations.forEach { location ->
-                markers += "${markerQuery}${location.latitude},${location.longitude}"
-            }
-
-            this.markers = markers
+            this.markers = originMarker + destinationMarker
             return this
         }
 
