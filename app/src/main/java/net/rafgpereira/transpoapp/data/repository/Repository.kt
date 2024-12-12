@@ -52,7 +52,10 @@ class Repository @Inject constructor(
         rideDestination = destination
 
         try {
-            apiService.getEstimate(EstimateRequestBody(userId, origin, destination)).let { result ->
+            apiService.getEstimate(
+                EstimateRequestBody(
+                    userId.ifEmpty { null }, origin.ifEmpty { null }, destination.ifEmpty { null })
+            ).let { result ->
                 if (result.isSuccessful) {
                     result.body()?.let { body ->
                         rideDistance = body.distance
@@ -121,7 +124,10 @@ class Repository @Inject constructor(
                 } else handleFailedRequest(result, onFailure)
             }
         } catch (ex: Exception) {
-            handleException(ex, onFailure)
+            // Retrofit não aceita NULL para valor de path e joga IllegalArgumentException.
+            // Passando "" a url retorna 404 então estou mostrando a mensagem hardcoded.
+            _errorMessage.emit("sem corridas salvas")
+            onFailure()
         }
     }
 
