@@ -46,6 +46,7 @@ import net.rafgpereira.transpoapp.ui.common.ThemedElevatedCard
 import net.rafgpereira.transpoapp.ui.common.UiState
 import net.rafgpereira.transpoapp.ui.viewmodel.RideHistoryViewModel
 import net.rafgpereira.transpoapp.util.debounced
+import net.rafgpereira.transpoapp.util.formatStringDate
 import java.text.NumberFormat
 
 @Composable
@@ -140,7 +141,7 @@ fun RideCard(
         modifier = modifier.padding(dimensionResource(R.dimen.double_space)),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.space)),
     ) {
-        LabelAndInformation(stringResource(R.string.ridehistory_date), ride.date)
+        LabelAndInformation(stringResource(R.string.ridehistory_date), ride.date.formatStringDate())
         LabelAndInformation(
             stringResource(R.string.requestrideoptions_name_label), ride.driver.name
         )
