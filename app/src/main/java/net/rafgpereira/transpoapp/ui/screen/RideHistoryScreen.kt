@@ -45,6 +45,7 @@ import net.rafgpereira.transpoapp.ui.common.TextOrProgressIndicator
 import net.rafgpereira.transpoapp.ui.common.ThemedElevatedCard
 import net.rafgpereira.transpoapp.ui.common.UiState
 import net.rafgpereira.transpoapp.ui.viewmodel.RideHistoryViewModel
+import net.rafgpereira.transpoapp.util.debounced
 import java.text.NumberFormat
 
 @Composable
@@ -189,7 +190,7 @@ fun DriverDropdownAndFilter(
     )
     Button(
         modifier = modifier.width(dimensionResource(R.dimen.button_width)),
-        onClick = { getRideHistory() },
+        onClick = debounced(getRideHistory),
         enabled = uiState == UiState.START
     ) {
         TextOrProgressIndicator(
@@ -232,16 +233,17 @@ fun DriverDropdownMenu(
                     imageVector = Icons.Filled.ArrowDropDown,
                     contentDescription = stringResource(R.string.history_dropdown_icon_desc),
                 ) },
-                // TODO change colors when disabled
-                colors = TextFieldDefaults.colors(
-                    disabledTextColor = MaterialTheme.colorScheme.onSurface,
-                    disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    disabledTrailingIconColor = MaterialTheme.colorScheme.onSurface,
-                    disabledIndicatorColor =
+                colors = if (uiState == UiState.START) {
+                    TextFieldDefaults.colors(
+                        disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                        disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        disabledTrailingIconColor = MaterialTheme.colorScheme.onSurface,
+                        disabledIndicatorColor =
                         if (dropdownExpandedState.value)
                             MaterialTheme.colorScheme.surfaceContainerHighest
                         else MaterialTheme.colorScheme.onSurface,
-                ),
+                    )
+                } else TextFieldDefaults.colors()
             )
             DropdownMenu(
                 modifier = modifier.width(dimensionResource(R.dimen.small_textfield_width)),

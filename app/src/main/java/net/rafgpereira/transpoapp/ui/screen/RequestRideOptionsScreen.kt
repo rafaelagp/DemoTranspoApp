@@ -1,5 +1,6 @@
 package net.rafgpereira.transpoapp.ui.screen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -21,11 +22,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import coil3.compose.AsyncImage
+import coil3.compose.AsyncImagePainter
+import coil3.compose.rememberAsyncImagePainter
 import net.rafgpereira.transpoapp.R
 import net.rafgpereira.transpoapp.util.StaticMapsUrl
 import net.rafgpereira.transpoapp.domain.model.Driver
@@ -111,13 +114,29 @@ fun RequestRideOptionsScreenContent(
 
 @Composable
 fun RouteMap(modifier: Modifier, imageUrl: String) {
-    AsyncImage(
-        modifier = modifier.fillMaxWidth(),
-        model = imageUrl,
-        alignment = Alignment.Center,
-        contentScale = ContentScale.FillWidth,
-        contentDescription = stringResource(R.string.requestrideoptions_routemap_desc)
-    )
+    val painter = rememberAsyncImagePainter(imageUrl)
+    when (painter.state.collectAsState().value) {
+        is AsyncImagePainter.State.Error,
+        is AsyncImagePainter.State.Empty,
+        is AsyncImagePainter.State.Loading -> {
+            Image(
+                modifier = modifier.fillMaxWidth(),
+                painter = painterResource(R.drawable.placeholder),
+                alignment = Alignment.TopCenter,
+                contentScale = ContentScale.FillWidth,
+                contentDescription = stringResource(R.string.requestrideoptions_routemap_desc)
+            )
+        }
+        is AsyncImagePainter.State.Success -> {
+            Image(
+                modifier = modifier.fillMaxWidth(),
+                painter = painter,
+                alignment = Alignment.TopCenter,
+                contentScale = ContentScale.FillWidth,
+                contentDescription = stringResource(R.string.requestrideoptions_routemap_desc)
+            )
+        }
+    }
 }
 
 @Composable
