@@ -1,4 +1,4 @@
-Para o Google Maps funcionar é necessário uma API key. 
+Para a Static Maps API funcionar é necessário uma API key. 
 
 Instruções:
 
