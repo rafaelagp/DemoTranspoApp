@@ -72,7 +72,7 @@ fun RequestCarScreenContent(
                 value = userId.collectAsState().value,
                 onValueChange = { userId.value = it },
                 label = {
-                    Text(text = stringResource(R.string.requestcar_userid_field_title),)
+                    Text(text = stringResource(R.string.requestride_userid_field_title),)
                 },
                 enabled = uiState == UiState.START
             )
@@ -81,7 +81,7 @@ fun RequestCarScreenContent(
                 value = origin.collectAsState().value,
                 onValueChange = { origin.value = it },
                 label = {
-                    Text(text = stringResource(R.string.requestcar_originaddress_field_title),)
+                    Text(text = stringResource(R.string.requestride_originaddress_field_title),)
                 },
                 enabled = uiState == UiState.START
             )
@@ -91,7 +91,7 @@ fun RequestCarScreenContent(
                 onValueChange = { destination.value = it },
                 label = {
                     Text(text =
-                    stringResource(R.string.requestcar_destinationaddress_field_title),
+                    stringResource(R.string.requestride_destinationaddress_field_title),
                     )
                 },
                 enabled = uiState == UiState.START
@@ -114,7 +114,7 @@ fun RequestCarScreenContent(
                 TextOrProgressIndicator(
                     modifier = modifier,
                     showIndicatorCondition = uiState != UiState.START,
-                    text = stringResource(R.string.requestcar_request_button_text),
+                    text = stringResource(R.string.requestride_request_button_text),
                 )
             }
         }

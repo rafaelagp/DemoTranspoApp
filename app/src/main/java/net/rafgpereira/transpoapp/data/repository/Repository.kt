@@ -25,8 +25,8 @@ class Repository @Inject constructor(
     private val _drivers = MutableStateFlow<List<Driver>>(listOf())
     override val drivers = _drivers.asStateFlow()
 
-    private val _rides = MutableStateFlow<List<Ride>>(listOf())
-    override val rideHistory = _rides.asStateFlow()
+    private val _rideHistory = MutableStateFlow<List<Ride>>(listOf())
+    override val rideHistory = _rideHistory.asStateFlow()
 
     private val _route = MutableStateFlow<List<LatLng>>(listOf())
     override val route = _route.asStateFlow()
@@ -116,7 +116,7 @@ class Repository @Inject constructor(
         try {
             apiService.getHistory(userId, driverId).let { result ->
                 if (result.isSuccessful) {
-                    result.body()?.rides?.let { _rides.emit(it) }
+                    result.body()?.rides?.let { _rideHistory.emit(it) }
                     onSuccess()
                 } else handleFailedRequest(result, onFailure)
             }
@@ -126,6 +126,8 @@ class Repository @Inject constructor(
     }
 
     override suspend fun clearErrorMessage() { _errorMessage.emit(null) }
+
+    override fun clearRideHistory() { _rideHistory.value = listOf() }
 
     private suspend fun <T> handleFailedRequest(result: Response<T>, onFailure: () -> Unit) {
         result.errorBody()?.getJsonObject<RequestError>()?.errorDescription?.let {

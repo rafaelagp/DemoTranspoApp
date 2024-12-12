@@ -1,12 +1,12 @@
 package net.rafgpereira.transpoapp.domain.model
 
 data class Driver(
-    val id: Int,
-    val name: String,
-    val description: String,
-    val vehicle: String,
-    val review: DriverReview,
-    val value: Double
+    val id: Int = 0,
+    val name: String = "",
+    val description: String = "",
+    val vehicle: String = "",
+    val review: DriverReview = DriverReview(),
+    val value: Double = 0.0
 )
 
 val fakeDrivers = listOf(

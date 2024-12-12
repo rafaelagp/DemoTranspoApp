@@ -36,4 +36,6 @@ interface IRepository {
     )
 
     suspend fun clearErrorMessage()
+
+    fun clearRideHistory()
 }

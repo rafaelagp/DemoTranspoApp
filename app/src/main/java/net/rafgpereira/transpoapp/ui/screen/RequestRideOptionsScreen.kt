@@ -11,8 +11,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
-import androidx.compose.material3.CardColors
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -36,6 +34,7 @@ import net.rafgpereira.transpoapp.domain.model.fakeDrivers
 import net.rafgpereira.transpoapp.ui.common.ErrorAlertDialog
 import net.rafgpereira.transpoapp.ui.common.ScaffoldAndSurface
 import net.rafgpereira.transpoapp.ui.common.TextOrProgressIndicator
+import net.rafgpereira.transpoapp.ui.common.ThemedElevatedCard
 import net.rafgpereira.transpoapp.ui.common.UiState
 import net.rafgpereira.transpoapp.ui.viewmodel.RequestRideOptionsViewModel
 import net.rafgpereira.transpoapp.util.debounced
@@ -88,7 +87,7 @@ fun RequestRideOptionsScreenContent(
     navigateUp: (() -> Unit)?,
 ) = ScaffoldAndSurface(
         modifier = modifier,
-        title = stringResource(R.string.requestcaroptions_screen_title),
+        title = stringResource(R.string.requestrideoptions_screen_title),
         navigateUp = navigateUp,
     ) {
         Column {
@@ -117,7 +116,7 @@ fun RouteMap(modifier: Modifier, imageUrl: String) {
         model = imageUrl,
         alignment = Alignment.Center,
         contentScale = ContentScale.FillWidth,
-        contentDescription = stringResource(R.string.requestcaroptions_routemap_desc)
+        contentDescription = stringResource(R.string.requestrideoptions_routemap_desc)
     )
 }
 
@@ -127,27 +126,19 @@ fun DriverCard(
     uiState: UiState,
     driver: Driver,
     choose: () -> Unit,
-) = ElevatedCard(
-    modifier = modifier.padding(dimensionResource(R.dimen.space)),
-    colors = CardColors(
-        containerColor = MaterialTheme.colorScheme.primaryContainer,
-        contentColor = Color.Black,
-        disabledContainerColor = Color.DarkGray,
-        disabledContentColor = Color.DarkGray
-    )
-) {
+) = ThemedElevatedCard(modifier) {
     Column(
         modifier = modifier.padding(dimensionResource(R.dimen.double_space)),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.space)),
     ) {
-        LabelAndInformation(stringResource(R.string.requestcaroptions_name_label), driver.name)
+        LabelAndInformation(stringResource(R.string.requestrideoptions_name_label), driver.name)
         LabelAndInformation(
-            stringResource(R.string.requestcaroptions_vehicle_label), driver.vehicle
+            stringResource(R.string.requestrideoptions_vehicle_label), driver.vehicle
         )
         RatingLabelAndInformation(driver.review.rating, driver.review.comment)
         if (driver.description.isEmpty().not()) {
             LabelAndInformation(
-                stringResource(R.string.requestcaroptions_desc_label),
+                stringResource(R.string.requestrideoptions_desc_label),
                 driver.description
             )
         }
@@ -166,7 +157,7 @@ fun DriverCard(
                 TextOrProgressIndicator(
                     modifier = modifier,
                     showIndicatorCondition = uiState != UiState.START,
-                    text = stringResource(R.string.requestcaroptions_choose_button_text),
+                    text = stringResource(R.string.requestrideoptions_choose_button_text),
                 )
             }
         }
@@ -175,13 +166,13 @@ fun DriverCard(
 
 @Composable
 fun RatingLabelAndInformation(rating: Long, comment: String) = Column {
-        Text(stringResource(R.string.requestcaroptions_rating_label))
+        Text(stringResource(R.string.requestrideoptions_rating_label))
         Row {
             for (i in 1..rating)
                 Icon(
                     imageVector = Icons.Filled.Star,
                     contentDescription = stringResource(
-                        R.string.requestcaroptions_rating_star_desc
+                        R.string.requestrideoptions_rating_star_desc
                     )
                 )
             if (rating < 5) {
@@ -190,7 +181,7 @@ fun RatingLabelAndInformation(rating: Long, comment: String) = Column {
                         imageVector = Icons.Filled.Star,
                         tint = Color.LightGray,
                         contentDescription = stringResource(
-                            R.string.requestcaroptions_rating_max_star_desc
+                            R.string.requestrideoptions_rating_max_star_desc
                         )
                     )
             }
@@ -200,7 +191,7 @@ fun RatingLabelAndInformation(rating: Long, comment: String) = Column {
 
 @Composable
 fun ValueLabelAndInformation(value: Double) = Column {
-        Text(stringResource(R.string.requestcaroptions_cost_label))
+        Text(stringResource(R.string.requestrideoptions_cost_label))
         InformationText(
             NumberFormat.getCurrencyInstance().format(value),
             MaterialTheme.typography.headlineMedium
@@ -223,7 +214,7 @@ fun InformationText(info: String, style: TextStyle = MaterialTheme.typography.ti
 @Composable
 @Preview(showSystemUi = false, showBackground = true)
 fun LabelAndInformationPreview() = LabelAndInformation(
-    stringResource(R.string.requestcaroptions_name_label), fakeDrivers[0].name
+    stringResource(R.string.requestrideoptions_name_label), fakeDrivers[0].name
 )
 
 @Composable

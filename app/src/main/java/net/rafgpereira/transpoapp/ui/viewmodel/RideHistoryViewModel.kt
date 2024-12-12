@@ -12,6 +12,7 @@ import javax.inject.Inject
 class RideHistoryViewModel @Inject constructor(repository: IRepository)
 : BaseViewModel(repository) {
     val drivers = repository.drivers
+    val rides = repository.rideHistory
     val userId = MutableStateFlow("")
     val driverId = MutableStateFlow(0)
 
@@ -24,4 +25,6 @@ class RideHistoryViewModel @Inject constructor(repository: IRepository)
             onFailure = { _uiState.value = UiState.START }
         )
     }
+
+    fun clearRideHistory() = repository.clearRideHistory()
 }
