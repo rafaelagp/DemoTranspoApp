@@ -56,7 +56,7 @@ fun RequestRideOptionsScreen(
     val uiState = viewModel.uiState.collectAsState()
     val staticMapUrl = StaticMapsUrl
         .Builder()
-        .setMarkers(listOf(route.value.first(), route.value.last()))
+        .setMarkers(route.value.first(), route.value.last())
         .setPath(route.value)
         .setPathColor(MaterialTheme.colorScheme.primary)
         .build()
